@@ -9,9 +9,8 @@ public class BishopMoveCalculator implements PieceMovesCalculator {
     ChessPiece myPiece;
 
     public BishopMoveCalculator() {
-        this.possible = new HashSet<ChessMove>();
+        this.possible = new HashSet<>();
     }
-
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         myPiece = board.getPiece(myPosition);
