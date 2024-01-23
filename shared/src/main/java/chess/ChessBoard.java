@@ -1,5 +1,7 @@
 package chess;
 
+import java.util.Arrays;
+
 /**
  * A chessboard that can hold and rearrange chess pieces.
  * <p>
@@ -8,11 +10,11 @@ package chess;
  */
 public class ChessBoard {
 
-    private static ChessPiece[][] board;
+    private ChessPiece[][] board;
     public ChessBoard() {
-        board = new ChessPiece[8][8];
-        setBoard();
+        this.board = new ChessPiece[8][8];
     }
+
 
     /**
      * Adds a chess piece to the chessboard
@@ -23,7 +25,7 @@ public class ChessBoard {
     public void addPiece(ChessPosition position, ChessPiece piece) {
         int r = position.getRow();
         int c = position.getColumn();
-        board[r][c] = piece;
+        this.board[r][c] = piece;
     }
 
     /**
@@ -36,10 +38,10 @@ public class ChessBoard {
     public ChessPiece getPiece(ChessPosition position) {
         int r = position.getRow();
         int c = position.getColumn();
-        if (board[r][c] == null){
+        if (this.board[r][c] == null){
             return null;
         } else {
-            return board[r][c];
+            return this.board[r][c];
         }
     }
 
@@ -48,9 +50,12 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        board = new ChessPiece[8][8];
+        this.board = new ChessPiece[8][8];
         setBoard();
     }
+    /**
+    * I a
+    */
     private void setBoard(){
         addPiece(new ChessPosition(0,0),new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK));
         addPiece(new ChessPosition(0,1),new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT));
@@ -74,5 +79,18 @@ public class ChessBoard {
         for (int i = 0; i <= 7; i++) {
             addPiece(new ChessPosition(6,i),new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessBoard that = (ChessBoard) o;
+        return Arrays.deepEquals(board, that.board);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(board);
     }
 }
