@@ -21,6 +21,7 @@ public class BishopMoveCalculator implements PieceMovesCalculator {
         while(row<8 && col>1){
             row++;
             col--;
+            System.out.println("Position: {" + row + "," + col + "}");
             position = new ChessPosition(row,col);
             ChessPiece spot = board.getPiece(new ChessPosition(row,col));
             if (spot == null) {
@@ -29,12 +30,16 @@ public class BishopMoveCalculator implements PieceMovesCalculator {
                 break;
             } else{
                 this.possible.add(new ChessMove(myPosition,position,null));
+                break;
             }
         }
         // Getting all possible moves moving to the top right corner
+        row = myPosition.getRow();
+        col = myPosition.getColumn();
         while(row<8 && col<8){
             row++;
             col++;
+            System.out.println("Position: {" + row + "," + col + "}");
             position = new ChessPosition(row,col);
             ChessPiece spot = board.getPiece(new ChessPosition(row,col));
             if (spot == null) {
@@ -43,12 +48,16 @@ public class BishopMoveCalculator implements PieceMovesCalculator {
                 break;
             } else{
                 this.possible.add(new ChessMove(myPosition,position,null));
+                break;
             }
         }
+        row = myPosition.getRow();
+        col = myPosition.getColumn();
         // Getting all possible moves moving to bottom right corner
         while(row>1 && col<8){
             row--;
             col++;
+            System.out.println("Position: {" + row + "," + col + "}");
             position = new ChessPosition(row,col);
             ChessPiece spot = board.getPiece(new ChessPosition(row,col));
             if (spot == null) {
@@ -57,12 +66,16 @@ public class BishopMoveCalculator implements PieceMovesCalculator {
                 break;
             } else{
                 this.possible.add(new ChessMove(myPosition,position,null));
+                break;
             }
         }
+        row = myPosition.getRow();
+        col = myPosition.getColumn();
         // Getting all possible moves moving to bottom left corner
-        while(row>1 && col<1){
+        while(row>1 && col>1){
             row--;
             col--;
+            System.out.println("Position: {" + row + "," + col + "}");
             position = new ChessPosition(row,col);
             ChessPiece spot = board.getPiece(new ChessPosition(row,col));
             if (spot == null) {
@@ -71,8 +84,9 @@ public class BishopMoveCalculator implements PieceMovesCalculator {
                 break;
             } else{
                 this.possible.add(new ChessMove(myPosition,position,null));
+                break;
             }
         }
-        return null;
+        return this.possible;
     }
 }
