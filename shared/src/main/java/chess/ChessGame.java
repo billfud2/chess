@@ -74,6 +74,10 @@ public class ChessGame {
                 bord.removePiece(start);
                 throw new InvalidMoveException("Not a Valid Move");
             }
+            ChessPiece.PieceType promo = move.getPromotionPiece();
+            if (promo != null){
+                bord.addPiece(end ,new ChessPiece(piece.getTeamColor(), promo));
+            }
             if (piece.getPieceType() == ChessPiece.PieceType.KING){
                 if (piece.getTeamColor() == TeamColor.WHITE){
                     bord.moveWKing(end);
@@ -120,7 +124,9 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        if (isInCheck(teamColor)){
+
+        }
     }
 
     /**
@@ -151,4 +157,5 @@ public class ChessGame {
     public ChessBoard getBoard() {
         return this.board;
     }
+
 }
