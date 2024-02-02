@@ -10,6 +10,7 @@ import java.util.Collection;
  */
 public class ChessGame {
     TeamColor turn;
+    ChessBoard board;
     public ChessGame() {
         this.turn = TeamColor.WHITE;
     }
@@ -73,6 +74,13 @@ public class ChessGame {
                 bord.removePiece(start);
                 throw new InvalidMoveException("Not a Valid Move");
             }
+            if (piece.getPieceType() == ChessPiece.PieceType.KING){
+                if (piece.getTeamColor() == TeamColor.WHITE){
+                    bord.moveWKing(end);
+                } else{
+                    bord.moveBKing(end);
+                }
+            }
         } else{
             throw new InvalidMoveException("Not a Valid Move");
         }
@@ -85,7 +93,24 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        ChessBoard bord = getBoard();
+        ChessPosition king = bord.kingPos(teamColor);
+        for (int i = 1; i <= 8; i++) {
+            for (int j = 1; j <= 8; j++) {
+                ChessPosition pos = new ChessPosition(i,j);
+                ChessPiece piece = bord.getPiece(pos);
+                if (piece != null && piece.getTeamColor() != teamColor){
+                    Collection<ChessMove> moves = piece.pieceMoves(bord,pos);
+                    for (ChessMove move : moves){
+                        if (move.getEndPosition() == king){
+                            return true;
+                        }
+                    }
+                }
+
+            }
+        }
+        return false;
     }
 
     /**
@@ -115,7 +140,7 @@ public class ChessGame {
      * @param board the new board to use
      */
     public void setBoard(ChessBoard board) {
-        throw new RuntimeException("Not implemented");
+        this.board = board;
     }
 
     /**
@@ -124,6 +149,6 @@ public class ChessGame {
      * @return the chessboard
      */
     public ChessBoard getBoard() {
-        throw new RuntimeException("Not implemented");
+        return this.board;
     }
 }

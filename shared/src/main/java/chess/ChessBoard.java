@@ -11,6 +11,8 @@ import java.util.Arrays;
 public class ChessBoard {
 
     private ChessPiece[][] board;
+    private ChessPosition wKing;
+    private ChessPosition bKing;
     public ChessBoard() {
         this.board = new ChessPiece[8][8];
     }
@@ -61,7 +63,8 @@ public class ChessBoard {
         addPiece(new ChessPosition(1,2),new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT));
         addPiece(new ChessPosition(1,3),new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP));
         addPiece(new ChessPosition(1,4),new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.QUEEN));
-        addPiece(new ChessPosition(1,5),new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KING));
+        this.wKing = new ChessPosition(1,5);
+        addPiece(wKing,new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KING));
         addPiece(new ChessPosition(1,6),new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP));
         addPiece(new ChessPosition(1,7),new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT));
         addPiece(new ChessPosition(1,8),new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK));
@@ -72,7 +75,8 @@ public class ChessBoard {
         addPiece(new ChessPosition(8,2),new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT));
         addPiece(new ChessPosition(8,3),new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP));
         addPiece(new ChessPosition(8,4),new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.QUEEN));
-        addPiece(new ChessPosition(8,5),new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KING));
+        this.bKing = new ChessPosition(8,5);
+        addPiece(bKing,new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KING));
         addPiece(new ChessPosition(8,6),new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP));
         addPiece(new ChessPosition(8,7),new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT));
         addPiece(new ChessPosition(8,8),new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK));
@@ -85,6 +89,22 @@ public class ChessBoard {
         int c = position.getColumn()-1;
         if (this.board[r][c] != null){
             this.board[r][c] = null;
+        }
+    }
+
+    public void moveWKing(ChessPosition end){
+        this.wKing = end;
+    }
+
+    public void moveBKing(ChessPosition end){
+        this.bKing = end;
+    }
+
+    public ChessPosition kingPos(ChessGame.TeamColor color){
+        if(color == ChessGame.TeamColor.WHITE){
+            return this.wKing;
+        } else{
+            return this.bKing;
         }
     }
 
