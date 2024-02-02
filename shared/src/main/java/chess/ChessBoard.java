@@ -80,6 +80,14 @@ public class ChessBoard {
             addPiece(new ChessPosition(7,i),new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
         }
     }
+    public void removePiece(ChessPosition position){
+        int r = position.getRow()-1;
+        int c = position.getColumn()-1;
+        if (this.board[r][c] != null){
+            this.board[r][c] = null;
+        }
+    }
+
 
     @Override
     public boolean equals(Object o) {
