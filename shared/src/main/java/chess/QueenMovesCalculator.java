@@ -18,7 +18,7 @@ public class QueenMovesCalculator implements PieceMovesCalculator{
         // Getting all possible moves moving to the top
         while(row<8){
             row++;
-            System.out.println("Position: {" + row + "," + col + "}");
+            System.out.println("Queen Position: {" + row + "," + col + "}");
             position = new ChessPosition(row,col);
             ChessPiece spot = board.getPiece(new ChessPosition(row,col));
             if (spot == null) {
@@ -35,7 +35,7 @@ public class QueenMovesCalculator implements PieceMovesCalculator{
         col = myPosition.getColumn();
         while(col<8){
             col++;
-            System.out.println("Position: {" + row + "," + col + "}");
+            System.out.println("Queen Position: {" + row + "," + col + "}");
             position = new ChessPosition(row,col);
             ChessPiece spot = board.getPiece(new ChessPosition(row,col));
             if (spot == null) {
@@ -52,7 +52,7 @@ public class QueenMovesCalculator implements PieceMovesCalculator{
         // Getting all possible moves moving to bottom
         while(row>1){
             row--;
-            System.out.println("Position: {" + row + "," + col + "}");
+            System.out.println("Queen Position: {" + row + "," + col + "}");
             position = new ChessPosition(row,col);
             ChessPiece spot = board.getPiece(new ChessPosition(row,col));
             if (spot == null) {
@@ -69,7 +69,7 @@ public class QueenMovesCalculator implements PieceMovesCalculator{
         // Getting all possible moves moving to left
         while(col>1){
             col--;
-            System.out.println("Position: {" + row + "," + col + "}");
+            System.out.println("Queen Position: {" + row + "," + col + "}");
             position = new ChessPosition(row,col);
             ChessPiece spot = board.getPiece(new ChessPosition(row,col));
             if (spot == null) {
@@ -87,7 +87,7 @@ public class QueenMovesCalculator implements PieceMovesCalculator{
         while(row<8 && col>1){
             row++;
             col--;
-            System.out.println("Position: {" + row + "," + col + "}");
+            System.out.println("Queen Position: {" + row + "," + col + "}");
             position = new ChessPosition(row,col);
             ChessPiece spot = board.getPiece(new ChessPosition(row,col));
             if (spot == null) {
@@ -105,7 +105,7 @@ public class QueenMovesCalculator implements PieceMovesCalculator{
         while(row<8 && col<8){
             row++;
             col++;
-            System.out.println("Position: {" + row + "," + col + "}");
+            System.out.println("Queen Position: {" + row + "," + col + "}");
             position = new ChessPosition(row,col);
             ChessPiece spot = board.getPiece(new ChessPosition(row,col));
             if (spot == null) {
@@ -123,7 +123,7 @@ public class QueenMovesCalculator implements PieceMovesCalculator{
         while(row>1 && col<8){
             row--;
             col++;
-            System.out.println("Position: {" + row + "," + col + "}");
+            System.out.println("Queen Position: {" + row + "," + col + "}");
             position = new ChessPosition(row,col);
             ChessPiece spot = board.getPiece(new ChessPosition(row,col));
             if (spot == null) {
@@ -141,7 +141,7 @@ public class QueenMovesCalculator implements PieceMovesCalculator{
         while(row>1 && col>1){
             row--;
             col--;
-            System.out.println("Position: {" + row + "," + col + "}");
+            System.out.println("Queen Position: {" + row + "," + col + "}");
             position = new ChessPosition(row,col);
             ChessPiece spot = board.getPiece(new ChessPosition(row,col));
             if (spot == null) {

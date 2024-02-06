@@ -64,10 +64,7 @@ public class ChessGame {
             ChessPosition end = move.getEndPosition();
             move(start, end, piece);
             if (isInCheck(piece.getTeamColor())){
-                ChessPosition pos = end;
-                end = start;
-                start = pos;
-                move(start, end, piece);
+                move(end, start, piece);
                 throw new InvalidMoveException("Not a Valid Move");
             }
             ChessPiece.PieceType promo = move.getPromotionPiece();
@@ -83,6 +80,12 @@ public class ChessGame {
             }
         } else{
             throw new InvalidMoveException("Not a Valid Move");
+        }
+        if (getTeamTurn() == TeamColor.WHITE) {
+            setTeamTurn(TeamColor.BLACK);
+        }
+        else{
+            setTeamTurn(TeamColor.WHITE);
         }
     }
 
