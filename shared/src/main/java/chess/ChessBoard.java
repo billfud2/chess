@@ -126,4 +126,11 @@ public class ChessBoard {
     public int hashCode() {
         return Arrays.hashCode(board);
     }
+
+    @Override
+    public String toString() {
+        return "ChessBoard{" +
+                "board=" + Arrays.toString(board) +
+                '}';
+    }
 }
