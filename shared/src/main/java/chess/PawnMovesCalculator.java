@@ -20,7 +20,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
             // Check to see if it can move up if nothing is there
             if (row < 8) {
                 row++;
-                System.out.println("Pawn Position: {" + row + "," + col + "}");
+                // System.out.println("Pawn Position: {" + row + "," + col + "}");
                 position = new ChessPosition(row, col);
                 ChessPiece spot = board.getPiece(new ChessPosition(row, col));
                 if (spot == null) {
@@ -32,7 +32,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
                 }
                 if (row == 3){
                     row++;
-                    System.out.println("Pawn Position: {" + row + "," + col + "}");
+                    // System.out.println("Pawn Position: {" + row + "," + col + "}");
                     position = new ChessPosition(row, col);
                     spot = board.getPiece(new ChessPosition(row, col));
                     if (spot == null) {
@@ -46,7 +46,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
             if (row < 8 && col > 1) {
                 row++;
                 col--;
-                System.out.println("Pawn Position: {" + row + "," + col + "}");
+                // System.out.println("Pawn Position: {" + row + "," + col + "}");
                 position = new ChessPosition(row, col);
                 ChessPiece spot = board.getPiece(new ChessPosition(row, col));
                 if (spot != null && spot.getTeamColor() == ChessGame.TeamColor.BLACK) {
@@ -63,7 +63,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
             if(row<8 && col<8){
                 row++;
                 col++;
-                System.out.println("Pawn Position: {" + row + "," + col + "}");
+                // System.out.println("Pawn Position: {" + row + "," + col + "}");
                 position = new ChessPosition(row,col);
                 ChessPiece spot = board.getPiece(new ChessPosition(row,col));
                 if (spot != null && spot.getTeamColor() == ChessGame.TeamColor.BLACK){
@@ -83,7 +83,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
             // check if it can move down if nothing is there
             if (row > 1) {
                 row--;
-                System.out.println("Pawn Position: {" + row + "," + col + "}");
+                // System.out.println("Pawn Position: {" + row + "," + col + "}");
                 position = new ChessPosition(row, col);
                 ChessPiece spot = board.getPiece(new ChessPosition(row, col));
                 if (spot == null) {
@@ -94,7 +94,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
                     }
                     if (row == 6){
                         row--;
-                        System.out.println("Pawn Position: {" + row + "," + col + "}");
+                        // System.out.println("Pawn Position: {" + row + "," + col + "}");
                         position = new ChessPosition(row, col);
                         spot = board.getPiece(new ChessPosition(row, col));
                         if (spot == null) {
@@ -110,7 +110,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
             if (row > 1 && col < 8) {
                 row--;
                 col++;
-                System.out.println("Pawn Position: {" + row + "," + col + "}");
+                // System.out.println("Pawn Position: {" + row + "," + col + "}");
                 position = new ChessPosition(row, col);
                 ChessPiece spot = board.getPiece(new ChessPosition(row, col));
                 if (spot != null && spot.getTeamColor() == ChessGame.TeamColor.WHITE) {
@@ -127,7 +127,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
             if (row > 1 && col > 1) {
                 row--;
                 col--;
-                System.out.println("Pawn Position: {" + row + "," + col + "}");
+                // System.out.println("Pawn Position: {" + row + "," + col + "}");
                 position = new ChessPosition(row, col);
                 ChessPiece spot = board.getPiece(new ChessPosition(row, col));
                 if (spot != null && spot.getTeamColor() == ChessGame.TeamColor.WHITE) {
