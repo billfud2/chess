@@ -58,11 +58,12 @@ public class ChessGame {
             move(start, end);
             if(isInCheck(piece.getTeamColor())) {
                 move(end, start);
-                System.out.println(piece.getTeamColor() + "," + piece.getPieceType() +" checkMove: {" +  start.getRow() + "," + start.getColumn() + "} -> {" + end.getRow() + "," + end.getColumn() + "}");
+                if (holder != null) {
+                    this.board.addPiece(end, holder);
+                }
                 continue;
             }
             move(end, start);
-            System.out.println(piece.getTeamColor() + "," + piece.getPieceType() +" Move: {" +  start.getRow() + "," + start.getColumn() + "} -> {" + end.getRow() + "," + end.getColumn() + "}");
             newMoves.add(move);
             if (holder != null) {
                 this.board.addPiece(end, holder);
@@ -83,7 +84,7 @@ public class ChessGame {
         ChessPiece piece = this.board.getPiece(start);
         if (validMoves(start).contains(move) && piece.getTeamColor() == getTeamTurn()) {
             move(start, end);
-            System.out.println(this.board.getPiece(end).getTeamColor() + "," + this.board.getPiece(end).getPieceType() +" Moves: {" +  start.getRow() + "," + start.getColumn() + "} -> {" + end.getRow() + "," + end.getColumn() + "}");
+//            System.out.println(this.board.getPiece(end).getTeamColor() + "," + this.board.getPiece(end).getPieceType() +" Moves: {" +  start.getRow() + "," + start.getColumn() + "} -> {" + end.getRow() + "," + end.getColumn() + "}");
             ChessPiece.PieceType promo = move.getPromotionPiece();
             if (promo != null){
                 this.board.addPiece(end ,new ChessPiece(piece.getTeamColor(), promo));
@@ -96,7 +97,7 @@ public class ChessGame {
                 }
             }
         } else{
-            System.out.println(this.board.getPiece(start).getTeamColor() + "," + this.board.getPiece(start).getPieceType() +"Faild Moves: {" +  start.getRow() + "," + start.getColumn() + "} -> {" + end.getRow() + "," + end.getColumn() + "}");
+//            System.out.println(this.board.getPiece(start).getTeamColor() + "," + this.board.getPiece(start).getPieceType() +"Faild Moves: {" +  start.getRow() + "," + start.getColumn() + "} -> {" + end.getRow() + "," + end.getColumn() + "}");
             throw new InvalidMoveException("Not a Valid Move");
         }
         if (getTeamTurn() == TeamColor.WHITE) {
@@ -149,20 +150,7 @@ public class ChessGame {
                     if (piece != null && piece.getTeamColor() == teamColor) {
                         Collection<ChessMove> moves = validMoves(pos);
                         if (!moves.isEmpty()) {
-                            for (ChessMove mov : moves) {
-                                ChessPosition end = mov.getEndPosition();
-                                ChessPosition start = mov.getStartPosition();
-                                ChessPiece holder = this.board.getPiece(end);
-                                move(start, end);
-                                if (!isInCheck(teamColor)) {
-                                    move(end, start);
-                                    return false;
-                                }
-                                move(end, start);
-                                if (holder != null) {
-                                    this.board.addPiece(end, holder);
-                                }
-                            }
+                            return false;
                         }
                     }
                 }
@@ -188,7 +176,6 @@ public class ChessGame {
                     if (piece != null && piece.getTeamColor() == teamColor) {
                         Collection<ChessMove> moves = validMoves(pos);
                         if (!moves.isEmpty()) {
-                            System.out.println("Moves: " + this.board.getPiece(pos).getTeamColor() + "," + this.board.getPiece(pos).getPieceType() + "Position: {" + pos.getRow() + "," + pos.getColumn() + "}");
                             return false;
                         }
                     }
