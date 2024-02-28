@@ -3,9 +3,9 @@ package model;
 import java.util.Objects;
 
 public class UserData {
-    String username;
-    String password;
-    String email;
+    public String username;
+    public String password;
+    public String email;
     public UserData(String username, String password, String email) {
         this.username = username;
         this.password = password;

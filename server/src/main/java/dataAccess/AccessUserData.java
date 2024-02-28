@@ -14,10 +14,10 @@ public class AccessUserData {
     public void clear() {
         this.allUserData.clear();
     }
-    private void createUser(String username, String password, String email){
+    public void createUser(String username, String password, String email){
         allUserData.put(username, new UserData(username, password, email));
     }
-    private UserData getUser(String username){
+    public UserData getUser(String username){
         return allUserData.get(username);
     }
 }

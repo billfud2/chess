@@ -5,6 +5,7 @@ import model.UserData;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class AccessAuthData {
     Map<String, AuthData> allAuthData;
@@ -15,13 +16,16 @@ public class AccessAuthData {
     public void clear() {
         this.allAuthData.clear();
     }
-    private void createAuth(String username, String authToken){
-        allAuthData.put(authToken, new AuthData(username, authToken));
+    public AuthData createAuth(String username){
+        String authToken =  UUID.randomUUID().toString();
+        AuthData auth = new AuthData(authToken, username);
+        allAuthData.put(authToken, auth);
+        return auth;
     }
-    private AuthData getAuth(String authToken){
+    public AuthData getAuth(String authToken){
         return allAuthData.get(authToken);
     }
-    private void deleteAuth(String authToken){
+    public void deleteAuth(String authToken){
         allAuthData.remove(authToken);
     }
 }
