@@ -14,7 +14,7 @@ public class AccessGameData {
     public AccessGameData() {
         this.allGameData = new HashMap<>();
     }
-    private void clear() {
+    public void clear() {
         this.allGameData.clear();
     }
     private void createGame(int gameID, String whiteUsername, String blackUsername, String gameName, ChessGame game){

@@ -12,7 +12,7 @@ public class AccessAuthData {
     public AccessAuthData() {
         this.allAuthData = new HashMap<>();
     }
-    private void clear() {
+    public void clear() {
         this.allAuthData.clear();
     }
     private void createAuth(String username, String authToken){

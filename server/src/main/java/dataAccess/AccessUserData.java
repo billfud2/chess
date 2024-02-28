@@ -11,7 +11,7 @@ public class AccessUserData {
     public AccessUserData() {
         this.allUserData = new HashMap<>();
     }
-    private void clear() {
+    public void clear() {
         this.allUserData.clear();
     }
     private void createUser(String username, String password, String email){
