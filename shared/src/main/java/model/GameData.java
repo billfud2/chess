@@ -7,8 +7,8 @@ import java.util.Objects;
 public class GameData {
     public ChessGame game;
     int gameID;
-    String whiteUsername;
-    String blackUsername;
+    public String whiteUsername;
+    public String blackUsername;
     String gameName;
 
     public GameData(int gameID, String blackUsername, String whiteUsername, String gameName, ChessGame game) {

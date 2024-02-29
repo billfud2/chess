@@ -22,8 +22,13 @@ public class AccessAuthData {
         allAuthData.put(authToken, auth);
         return auth;
     }
-    public AuthData getAuth(String authToken){
-        return allAuthData.get(authToken);
+    public AuthData getAuth(String authToken) throws DataAccessException {
+        if(allAuthData.containsKey(authToken)){
+            return allAuthData.get(authToken);
+        }
+        else{
+            throw new DataAccessException("Error: unauthorized");
+        }
     }
     public void deleteAuth(String authToken){
         allAuthData.remove(authToken);

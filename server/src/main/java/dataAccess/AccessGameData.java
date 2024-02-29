@@ -3,27 +3,29 @@ package dataAccess;
 import chess.ChessGame;
 import model.GameData;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class AccessGameData {
     Map<Integer , GameData> allGameData;
+    int curID;
 
     public AccessGameData() {
         this.allGameData = new HashMap<>();
+        this.curID = 0;
     }
     public void clear() {
         this.allGameData.clear();
     }
-    private void createGame(int gameID, String whiteUsername, String blackUsername, String gameName, ChessGame game){
-        allGameData.put(gameID , new GameData(gameID, whiteUsername, blackUsername, gameName, game));
+    public Integer createGame(String gameName) {
+        int gameID = curID;
+        curID++;
+        allGameData.put(gameID, new GameData(gameID, null, null, gameName, new ChessGame()));
+        return gameID;
     }
     private GameData getGame(int gameID){
         return allGameData.get(gameID);
     }
-    private Collection<GameData> listGames(){
+    public Collection<GameData> listGames(){
         return allGameData.values();
     }
     private void updateGame(int gameID, ChessGame newGame){
@@ -31,4 +33,10 @@ public class AccessGameData {
         chessGame.game = newGame;
     }
 
+    public void addWhitePlayer(String username, int gameID) {
+        allGameData.get(gameID).whiteUsername = username;
+    }
+    public void addBlackPlayer(String username, int gameID) {
+        allGameData.get(gameID).blackUsername = username;
+    }
 }
