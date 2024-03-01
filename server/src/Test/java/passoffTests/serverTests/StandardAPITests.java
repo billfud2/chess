@@ -157,12 +157,12 @@ public class StandardAPITests {
         TestModels.TestLoginRegisterResult loginOne = serverFacade.login(loginRequest);
         Assertions.assertEquals(HttpURLConnection.HTTP_OK, serverFacade.getStatusCode(),
                 "Server response code was not 200 OK");
-        Assertions.assertNotNull(loginOne.authToken, "Login result did not contain an authToken");
+        Assertions.assertNotNull(loginOne.authToken, "Login Result did not contain an authToken");
 
         TestModels.TestLoginRegisterResult loginTwo = serverFacade.login(loginRequest);
         Assertions.assertEquals(HttpURLConnection.HTTP_OK, serverFacade.getStatusCode(),
                 "Server response code was not 200 OK");
-        Assertions.assertNotNull(loginTwo.authToken, "Login result did not contain an authToken");
+        Assertions.assertNotNull(loginTwo.authToken, "Login Result did not contain an authToken");
 
         Assertions.assertNotEquals(existingAuth, loginOne.authToken,
                 "Authtoken returned by login matched authtoken from prior register");
@@ -220,7 +220,7 @@ public class StandardAPITests {
         registerRequest.password = newUser.password;
         registerRequest.email = newUser.email;
 
-        //submit register request
+        //submit register Requester
         TestModels.TestLoginRegisterResult registerResult = serverFacade.register(registerRequest);
 
         Assertions.assertEquals(HttpURLConnection.HTTP_OK, serverFacade.getStatusCode(),
@@ -238,13 +238,13 @@ public class StandardAPITests {
     @Order(7)
     @DisplayName("Re-Register User")
     public void registerTwice() throws TestException {
-        //create request trying to register existing user
+        //create Requester trying to register existing user
         TestModels.TestRegisterRequest registerRequest = new TestModels.TestRegisterRequest();
         registerRequest.username = existingUser.username;
         registerRequest.password = existingUser.password;
         registerRequest.email = existingUser.email;
 
-        //submit register request
+        //submit register Requester
         TestModels.TestLoginRegisterResult registerResult = serverFacade.register(registerRequest);
 
         Assertions.assertEquals(HttpURLConnection.HTTP_FORBIDDEN, serverFacade.getStatusCode(),
@@ -258,7 +258,7 @@ public class StandardAPITests {
 
     @Test
     @Order(8)
-    @DisplayName("Register Bad Request")
+    @DisplayName("Register Bad Requester")
     public void failRegister() throws TestException {
         //attempt to register a user without a password
         TestModels.TestRegisterRequest registerRequest = new TestModels.TestRegisterRequest();
@@ -269,7 +269,7 @@ public class StandardAPITests {
         TestModels.TestLoginRegisterResult registerResult = serverFacade.register(registerRequest);
 
         Assertions.assertEquals(HttpURLConnection.HTTP_BAD_REQUEST, serverFacade.getStatusCode(),
-                "Server response code was not 400 Bad Request");
+                "Server response code was not 400 Bad Requester");
         Assertions.assertTrue(registerResult.message.toLowerCase(Locale.ROOT).contains("error"),
                 "Response missing error message");
         Assertions.assertNull(registerResult.username, "Response incorrectly contained username");
@@ -335,8 +335,8 @@ public class StandardAPITests {
         Assertions.assertEquals(HttpURLConnection.HTTP_UNAUTHORIZED, serverFacade.getStatusCode(),
                 "Server response code was not 401 Unauthorized");
         Assertions.assertTrue(createResult.message.toLowerCase(Locale.ROOT).contains("error"),
-                "Bad result did not return an error message");
-        Assertions.assertNull(createResult.gameID, "Bad result returned a game ID");
+                "Bad Result did not return an error message");
+        Assertions.assertNull(createResult.gameID, "Bad Result returned a game ID");
     }
 
 
@@ -347,7 +347,7 @@ public class StandardAPITests {
         //create game
         TestModels.TestCreateResult createResult = serverFacade.createGame(createRequest, existingAuth);
 
-        //make watch request
+        //make watch Requester
         TestModels.TestJoinRequest watchRequest = new TestModels.TestJoinRequest();
         watchRequest.gameID = createResult.gameID;
 
@@ -378,7 +378,7 @@ public class StandardAPITests {
         //create game
         TestModels.TestCreateResult createResult = serverFacade.createGame(createRequest, existingAuth);
 
-        //make watch request
+        //make watch Requester
         TestModels.TestJoinRequest watchRequest = new TestModels.TestJoinRequest();
         watchRequest.gameID = createResult.gameID;
 
@@ -390,7 +390,7 @@ public class StandardAPITests {
                 "Server response code was not 401 Unauthorized");
         Assertions.assertTrue(
                 watchResult.message != null && watchResult.message.toLowerCase(Locale.ROOT).contains("error"),
-                "Invalid Request didn't return an error message");
+                "Invalid Requester didn't return an error message");
     }
 
 
@@ -401,7 +401,7 @@ public class StandardAPITests {
         //create game
         TestModels.TestCreateResult createResult = serverFacade.createGame(createRequest, existingAuth);
 
-        //make watch request
+        //make watch Requester
         TestModels.TestJoinRequest watchRequest = new TestModels.TestJoinRequest();
         watchRequest.gameID = 0;
 
@@ -410,10 +410,10 @@ public class StandardAPITests {
 
         //check failed
         Assertions.assertEquals(HttpURLConnection.HTTP_BAD_REQUEST, serverFacade.getStatusCode(),
-                "Server response code was not 400 Bad Request");
+                "Server response code was not 400 Bad Requester");
         Assertions.assertTrue(
                 watchResult.message != null && watchResult.message.toLowerCase(Locale.ROOT).contains("error"),
-                "Invalid Request didn't return an error message");
+                "Invalid Requester didn't return an error message");
     }
 
 
@@ -426,7 +426,7 @@ public class StandardAPITests {
         createRequest.gameName = "Test Game";
         TestModels.TestCreateResult createResult = serverFacade.createGame(createRequest, existingAuth);
 
-        //make watch request
+        //make watch Requester
         TestModels.TestJoinRequest watchRequest = new TestModels.TestJoinRequest();
         watchRequest.gameID = createResult.gameID;
 
@@ -540,7 +540,7 @@ public class StandardAPITests {
                 "Server response code was not 401 Unauthorized");
         Assertions.assertTrue(
                 joinResult.message != null && joinResult.message.toLowerCase(Locale.ROOT).contains("error"),
-                "Invalid Request didn't return an error message");
+                "Invalid Requester didn't return an error message");
     }
 
 
@@ -564,7 +564,7 @@ public class StandardAPITests {
         registerRequest.email = newUser.email;
         TestModels.TestLoginRegisterResult registerResult = serverFacade.register(registerRequest);
 
-        //join request trying to also join  as black
+        //join Requester trying to also join  as black
         joinRequest = new TestModels.TestJoinRequest();
         joinRequest.gameID = createResult.gameID;
         joinRequest.playerColor = ChessGame.TeamColor.BLACK;
@@ -575,7 +575,7 @@ public class StandardAPITests {
                 "Server response code was not 403 Forbidden");
         Assertions.assertTrue(
                 joinResult.message != null && joinResult.message.toLowerCase(Locale.ROOT).contains("error"),
-                "Invalid Request didn't return an error message");
+                "Invalid Requester didn't return an error message");
     }
 
 
@@ -597,10 +597,10 @@ public class StandardAPITests {
 
         //check
         Assertions.assertEquals(HttpURLConnection.HTTP_BAD_REQUEST, serverFacade.getStatusCode(),
-                "Server response code was not 400 Bad Request");
+                "Server response code was not 400 Bad Requester");
         Assertions.assertTrue(
                 joinResult.message != null && joinResult.message.toLowerCase(Locale.ROOT).contains("error"),
-                "Invalid Request didn't return an error message");
+                "Invalid Requester didn't return an error message");
     }
 
 
@@ -797,7 +797,7 @@ public class StandardAPITests {
         //check listResult
         Assertions.assertEquals(HttpURLConnection.HTTP_OK, serverFacade.getStatusCode(),
                 "Server response code was not 200 OK");
-        Assertions.assertEquals(0, listResult.games.length, "list result did not return 0 games after clear");
+        Assertions.assertEquals(0, listResult.games.length, "list Result did not return 0 games after clear");
     }
 
 

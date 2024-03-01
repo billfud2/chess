@@ -5,7 +5,7 @@ import model.AuthData;
 import model.GameData;
 import model.UserData;
 
-public class request {
+public class Requester {
 
     public UserData requestUserData(String userDataJSON){
         Gson parse = new Gson();
