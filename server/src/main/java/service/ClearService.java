@@ -10,7 +10,7 @@ public class ClearService {
         data = accessData;
     }
 
-    public void ClearAll(){
+    public void clearAll(){
         data.authDataAccess.clear();
         data.gameDataAccess.clear();
         data.userDataAccess.clear();

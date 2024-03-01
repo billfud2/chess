@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AccessUserData {
-    Map<String, UserData> allUserData;
+    public Map<String, UserData> allUserData;
 
     public AccessUserData() {
         this.allUserData = new HashMap<>();

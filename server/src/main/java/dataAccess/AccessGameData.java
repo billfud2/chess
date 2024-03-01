@@ -6,7 +6,7 @@ import model.GameData;
 import java.util.*;
 
 public class AccessGameData {
-    Map<Integer , GameData> allGameData;
+    public Map<Integer , GameData> allGameData;
     int curID;
 
     public AccessGameData() {
