@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class AccessAuthData {
-    Map<String, AuthData> allAuthData;
+    public Map<String, AuthData> allAuthData;
 
     public AccessAuthData() {
         this.allAuthData = new HashMap<>();

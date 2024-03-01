@@ -3,7 +3,7 @@ package model;
 import java.util.Objects;
 
 public class AuthData {
-    String authToken;
+    public String authToken;
     public String username;
 
     public AuthData(String authToken, String username) {
