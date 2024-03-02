@@ -9,6 +9,7 @@ import dataAccess.DataAccessException;
 import model.AuthData;
 import model.GameData;
 import requestAndResult.CreateGameRequest;
+import requestAndResult.CreateGameResult;
 import requestAndResult.JoinGameRequest;
 import requestAndResult.ListGamesResult;
 
@@ -22,9 +23,9 @@ public class GameService {
         return new ListGamesResult(data.gameDataAccess.listGames());
     }
 
-    public Integer createGame(CreateGameRequest gameReq) throws DataAccessException {
+    public CreateGameResult createGame(CreateGameRequest gameReq) throws DataAccessException {
         data.authDataAccess.getAuth(gameReq.authToken());
-        return data.gameDataAccess.createGame(gameReq.gameName());
+        return new CreateGameResult(data.gameDataAccess.createGame(gameReq.gameName()));
     }
 
     public void joinGame(JoinGameRequest joinReq) throws DataAccessException {

@@ -7,6 +7,10 @@ import model.AuthData;
 import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.Test;
+import requestAndResult.CreateGameRequest;
+import requestAndResult.CreateGameResult;
+import requestAndResult.JoinGameRequest;
+import requestAndResult.ListGamesResult;
 
 import java.util.Collection;
 
@@ -26,31 +30,31 @@ class GameServiceTest {
     @Test
     void listGames() throws DataAccessException {
         AuthData auth = serve.register(uData);
-        int id = gServe.createGame("best game", auth.authToken());
-        Collection<GameData> games = gServe.listGames(auth.authToken());
-        System.out.println(games);
-        assert !games.isEmpty();
+        CreateGameResult resID = gServe.createGame(new CreateGameRequest("best game", auth.authToken()));
+        ListGamesResult resGam = gServe.listGames(new AuthData(auth.authToken(),null));
+        System.out.println(resGam.games());
+        assert !resGam.games().isEmpty();
     }
 
     @Test
     void createGame() throws DataAccessException {
         AuthData auth = serve.register(uData);
-        int id = gServe.createGame("best game", auth.authToken());
-        assert id == 0;
+        CreateGameResult resID = gServe.createGame(new CreateGameRequest("best game", auth.authToken()));
+        assert resID.gameID() == 0;
     }
 
     @Test
     void joinGame() throws DataAccessException {
         AuthData auth = serve.register(uData);
-        int id = gServe.createGame("best game", auth.authToken());
-        gServe.joinGame(ChessGame.TeamColor.WHITE, 0, auth.authToken());
-        Collection<GameData> games = gServe.listGames(auth.authToken());
-        System.out.println(games);
+        CreateGameResult resID = gServe.createGame(new CreateGameRequest("best game", auth.authToken()));
+        gServe.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE, 0, auth.authToken()));
+        ListGamesResult resGam = gServe.listGames(new AuthData(auth.authToken(),null));
+        System.out.println(resGam.games());
         AuthData auth2 = serve.register(uData2);
-        gServe.joinGame(ChessGame.TeamColor.BLACK, 0, auth2.authToken());
-        games = gServe.listGames(auth.authToken());
-        System.out.println(games);
-        assert dB.gameDataAccess.allGameData.get(id).whiteUsername() == username;
-        assert dB.gameDataAccess.allGameData.get(id).blackUsername() == username2;
+        gServe.joinGame(new JoinGameRequest(ChessGame.TeamColor.BLACK, 0, auth2.authToken()));
+        resGam = gServe.listGames(new AuthData(auth.authToken(),null));
+        System.out.println(resGam.games());
+        assert dB.gameDataAccess.allGameData.get(resID.gameID()).whiteUsername() == username;
+        assert dB.gameDataAccess.allGameData.get(resID.gameID()).blackUsername() == username2;
     }
 }

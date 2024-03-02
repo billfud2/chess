@@ -7,6 +7,10 @@ import model.AuthData;
 import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.Test;
+import requestAndResult.CreateGameRequest;
+import requestAndResult.CreateGameResult;
+import requestAndResult.JoinGameRequest;
+import requestAndResult.ListGamesResult;
 
 import java.util.Collection;
 
@@ -26,14 +30,14 @@ class ClearServiceTest {
     @Test
     void clearAll() throws DataAccessException {
         AuthData auth = serve.register(uData);
-        int id = gServe.createGame("best game", auth.authToken());
-        gServe.joinGame(ChessGame.TeamColor.WHITE, 0, auth.authToken());
-        Collection<GameData> games = gServe.listGames(auth.authToken());
-        System.out.println(games);
+        CreateGameResult resID = gServe.createGame(new CreateGameRequest("best game", auth.authToken()));
+        gServe.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE, 0, auth.authToken()));
+        ListGamesResult resGam = gServe.listGames(new AuthData(auth.authToken(),null));
+        System.out.println(resGam.games());
         AuthData auth2 = serve.register(uData2);
-        gServe.joinGame(ChessGame.TeamColor.BLACK, 0, auth2.authToken());
-        games = gServe.listGames(auth.authToken());
-        System.out.println(games);
+        gServe.joinGame(new JoinGameRequest(ChessGame.TeamColor.BLACK, 0, auth2.authToken()));
+        resGam = gServe.listGames(new AuthData(auth.authToken(),null));
+        System.out.println(resGam.games());
         cServe.clearAll();
         assert cServe.data.gameDataAccess.allGameData.isEmpty();
         assert cServe.data.userDataAccess.allUserData.isEmpty();

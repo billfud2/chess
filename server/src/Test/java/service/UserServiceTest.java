@@ -23,7 +23,7 @@ class UserServiceTest {
     void login() {
         AuthData auth = serve.register(uData);
         System.out.println("{authToken: " + auth.authToken() + ", username: " + auth.username() + '}');
-        AuthData authLog = serve.login(username, password);
+        AuthData authLog = serve.login(new UserData(username, password,null));
         System.out.println("{authToken: " + authLog.authToken() + ", username: " + authLog.username() + '}');
         assert authLog != null;
     }
@@ -32,9 +32,9 @@ class UserServiceTest {
     void logout() {
         AuthData auth = serve.register(uData);
         System.out.println("{authToken: " + auth.authToken() + ", username: " + auth.username() + '}');
-        AuthData authLog = serve.login(username, password);
+        AuthData authLog = serve.login(new UserData(username, password,null));
         System.out.println("{authToken: " + authLog.authToken() + ", username: " + authLog.username() + '}');
-        serve.logout(authLog.authToken());
+        serve.logout(authLog);
         assert serve.data.authDataAccess.allAuthData.get(authLog) == null;
     }
 }
