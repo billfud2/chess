@@ -1,7 +1,6 @@
 package service;
 
 import dataAccess.DataAccess;
-import model.UserData;
 
 public class ClearService {
     DataAccess data;

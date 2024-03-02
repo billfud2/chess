@@ -10,8 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class ClearServiceTest {
     String username = "billfud";
     String password = "pass";
@@ -28,13 +26,13 @@ class ClearServiceTest {
     @Test
     void clearAll() throws DataAccessException {
         AuthData auth = serve.register(uData);
-        int id = gServe.createGame("best game", auth.authToken);
-        gServe.joinGame(ChessGame.TeamColor.WHITE, 0, auth.authToken);
-        Collection<GameData> games = gServe.listGames(auth.authToken);
+        int id = gServe.createGame("best game", auth.authToken());
+        gServe.joinGame(ChessGame.TeamColor.WHITE, 0, auth.authToken());
+        Collection<GameData> games = gServe.listGames(auth.authToken());
         System.out.println(games);
         AuthData auth2 = serve.register(uData2);
-        gServe.joinGame(ChessGame.TeamColor.BLACK, 0, auth2.authToken);
-        games = gServe.listGames(auth.authToken);
+        gServe.joinGame(ChessGame.TeamColor.BLACK, 0, auth2.authToken());
+        games = gServe.listGames(auth.authToken());
         System.out.println(games);
         cServe.clearAll();
         assert cServe.data.gameDataAccess.allGameData.isEmpty();

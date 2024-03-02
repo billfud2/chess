@@ -10,8 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class GameServiceTest {
     String username = "billfud";
     String password = "pass";
@@ -28,28 +26,31 @@ class GameServiceTest {
     @Test
     void listGames() throws DataAccessException {
         AuthData auth = serve.register(uData);
-        int id = gServe.createGame("best game", auth.authToken);
-        Collection<GameData> games = gServe.listGames(auth.authToken);
+        int id = gServe.createGame("best game", auth.authToken());
+        Collection<GameData> games = gServe.listGames(auth.authToken());
         System.out.println(games);
+        assert !games.isEmpty();
     }
 
     @Test
     void createGame() throws DataAccessException {
         AuthData auth = serve.register(uData);
-        int id = gServe.createGame("best game", auth.authToken);
+        int id = gServe.createGame("best game", auth.authToken());
         assert id == 0;
     }
 
     @Test
     void joinGame() throws DataAccessException {
         AuthData auth = serve.register(uData);
-        int id = gServe.createGame("best game", auth.authToken);
-        gServe.joinGame(ChessGame.TeamColor.WHITE, 0, auth.authToken);
-        Collection<GameData> games = gServe.listGames(auth.authToken);
+        int id = gServe.createGame("best game", auth.authToken());
+        gServe.joinGame(ChessGame.TeamColor.WHITE, 0, auth.authToken());
+        Collection<GameData> games = gServe.listGames(auth.authToken());
         System.out.println(games);
         AuthData auth2 = serve.register(uData2);
-        gServe.joinGame(ChessGame.TeamColor.BLACK, 0, auth2.authToken);
-        games = gServe.listGames(auth.authToken);
+        gServe.joinGame(ChessGame.TeamColor.BLACK, 0, auth2.authToken());
+        games = gServe.listGames(auth.authToken());
         System.out.println(games);
+        assert dB.gameDataAccess.allGameData.get(id).whiteUsername() == username;
+        assert dB.gameDataAccess.allGameData.get(id).blackUsername() == username2;
     }
 }

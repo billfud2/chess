@@ -12,16 +12,16 @@ public class UserService {
     }
 
     public AuthData register(UserData user) {
-        data.userDataAccess.createUser(user.username, user.password, user.email);
-        return data.authDataAccess.createAuth(user.username);
+        data.userDataAccess.createUser(user.username(), user.password(), user.email());
+        return data.authDataAccess.createAuth(user.username());
     }
-    public AuthData login(String username,String password ) {
-        if (data.userDataAccess.getUser(username).password == password){
-            return data.authDataAccess.createAuth(username);
+    public AuthData login(UserData user) {
+        if (data.userDataAccess.getUser(user.username()).password() == user.password()){
+            return data.authDataAccess.createAuth(user.username());
         }
         throw new RuntimeException("invalid Login");
     }
-    public void logout(String authToken) {
-        data.authDataAccess.deleteAuth(authToken);
+    public void logout(AuthData auth) {
+        data.authDataAccess.deleteAuth(auth.authToken());
     }
 }
