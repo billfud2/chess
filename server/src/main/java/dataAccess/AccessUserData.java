@@ -15,7 +15,13 @@ public class AccessUserData {
     public void clear() {
         this.allUserData.clear();
     }
-    public void createUser(String username, String password, String email){
+    public void createUser(String username, String password, String email) throws DataAccessException, BadRequestException, AlreadyTakenException {
+        if (allUserData.containsKey(username)){
+            throw new AlreadyTakenException("already taken");
+        }
+        if(username == null || password == null || email == null){
+            throw new BadRequestException("bad request");
+        }
         allUserData.put(username, new UserData(username, password, email));
     }
     public UserData getUser(String username){

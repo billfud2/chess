@@ -14,8 +14,8 @@ import requestAndResult.JoinGameRequest;
 import requestAndResult.ListGamesResult;
 
 public class GameService {
-    DataAccess data;
-    public GameService(DataAccess accessData) {data = accessData;
+    DataAccess data = DataAccess.getInstance();
+    public GameService() {
     }
 
     public ListGamesResult listGames(AuthData auth) throws DataAccessException {

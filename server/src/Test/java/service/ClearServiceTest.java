@@ -1,18 +1,17 @@
 package service;
 
 import chess.ChessGame;
+import dataAccess.AlreadyTakenException;
+import dataAccess.BadRequestException;
 import dataAccess.DataAccess;
 import dataAccess.DataAccessException;
 import model.AuthData;
-import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.Test;
 import requestAndResult.CreateGameRequest;
 import requestAndResult.CreateGameResult;
 import requestAndResult.JoinGameRequest;
 import requestAndResult.ListGamesResult;
-
-import java.util.Collection;
 
 class ClearServiceTest {
     String username = "billfud";
@@ -23,12 +22,12 @@ class ClearServiceTest {
     String password2 = "pass2";
     String email2 = "billfud22@gmail.com";
     UserData uData2 = new UserData(username2, password2, email2);
-    DataAccess dB = new DataAccess();
-    UserService serve = new UserService(dB);
-    GameService gServe = new GameService(dB);
-    ClearService cServe = new ClearService(dB);
+    DataAccess dB = DataAccess.getInstance();
+    UserService serve = new UserService();
+    GameService gServe = new GameService();
+    ClearService cServe = new ClearService();
     @Test
-    void clearAll() throws DataAccessException {
+    void clearAll() throws DataAccessException, BadRequestException, AlreadyTakenException {
         AuthData auth = serve.register(uData);
         CreateGameResult resID = gServe.createGame(new CreateGameRequest("best game", auth.authToken()));
         gServe.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE, 0, auth.authToken()));

@@ -3,11 +3,9 @@ package service;
 import dataAccess.DataAccess;
 
 public class ClearService {
-    DataAccess data;
+    DataAccess data = DataAccess.getInstance();
 
-    public ClearService(DataAccess accessData) {
-        data = accessData;
-    }
+    public ClearService() {}
 
     public void clearAll(){
         data.authDataAccess.clear();
