@@ -44,6 +44,18 @@ class UserServiceTest {
         System.out.println("{authToken: " + authLog.authToken() + ", username: " + authLog.username() + '}');
         assert authLog != null;
     }
+    @Test
+    void badLogin() throws DataAccessException, BadRequestException, AlreadyTakenException {
+        try {
+            AuthData auth = serve.register(uData);
+            System.out.println("{authToken: " + auth.authToken() + ", username: " + auth.username() + '}');
+            AuthData authLog = serve.login(new UserData("wrong", password, null));
+            System.out.println("{authToken: " + authLog.authToken() + ", username: " + authLog.username() + '}');
+        }catch(Exception e){
+            assertTrue(e instanceof DataAccessException);
+        }
+
+    }
 
     @Test
     void logout() throws DataAccessException, BadRequestException, AlreadyTakenException {

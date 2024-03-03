@@ -17,11 +17,11 @@ public class UserService {
         data.userDataAccess.createUser(user.username(), user.password(), user.email());
         return data.authDataAccess.createAuth(user.username());
     }
-    public AuthData login(UserData user) {
+    public AuthData login(UserData user) throws DataAccessException {
         if (data.userDataAccess.getUser(user.username()).password().equals(user.password())){
             return data.authDataAccess.createAuth(user.username());
         }
-        throw new RuntimeException("invalid Login");
+        throw new DataAccessException("unauthorized");
     }
     public void logout(AuthData auth) {
         data.authDataAccess.deleteAuth(auth.authToken());

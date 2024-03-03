@@ -18,11 +18,22 @@ public class UserHandler {
     static UserHandler instance;
     Gson gson = new Gson();
     UserService serve = new UserService();
-    public String handleLogin(Request reqData, Response res){
-        UserData request = (UserData)gson.fromJson(reqData.body(), UserData.class);
-        System.out.println(request);
-        AuthData result = serve.login(request);
-        return gson.toJson(result);
+    public String handleLogin(Request reqData, Response res) throws DataAccessException {
+        try {
+            UserData request = (UserData) gson.fromJson(reqData.body(), UserData.class);
+            System.out.println(request);
+            AuthData result = serve.login(request);
+            return gson.toJson(result);
+        }
+        catch (DataAccessException e){
+            var body = gson.toJson(Map.of("message", String.format("Error: %s", e.getMessage())));
+            res.status(401);
+            return body;
+        }catch (Exception e){
+            var body = gson.toJson(Map.of("message", String.format("Error: %s", e.getMessage())));
+            res.status(500);
+            return body;
+        }
     }
     public String handleRegister(Request reqData, Response res) throws DataAccessException, BadRequestException {
         try {

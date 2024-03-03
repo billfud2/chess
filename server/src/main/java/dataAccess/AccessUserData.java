@@ -24,7 +24,10 @@ public class AccessUserData {
         }
         allUserData.put(username, new UserData(username, password, email));
     }
-    public UserData getUser(String username){
-        return allUserData.get(username);
+    public UserData getUser(String username) throws DataAccessException {
+        if(allUserData.containsKey(username)) {
+            return allUserData.get(username);
+        }
+        throw new DataAccessException("unauthorized");
     }
 }
