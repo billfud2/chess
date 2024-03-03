@@ -3,7 +3,7 @@ package service;
 import dataAccess.DataAccess;
 
 public class ClearService {
-    DataAccess data = DataAccess.getInstance();
+    public DataAccess data = DataAccess.getInstance();
 
     public ClearService() {}
 

@@ -1,4 +1,4 @@
-package service;
+package serviceTests;
 
 import dataAccess.AlreadyTakenException;
 import dataAccess.BadRequestException;
@@ -7,6 +7,8 @@ import model.AuthData;
 import model.UserData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import service.ClearService;
+import service.UserService;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

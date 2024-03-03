@@ -1,4 +1,4 @@
-package service;
+package serviceTests;
 
 import chess.ChessGame;
 import dataAccess.AlreadyTakenException;
@@ -13,6 +13,9 @@ import requestAndResult.CreateGameRequest;
 import requestAndResult.CreateGameResult;
 import requestAndResult.JoinGameRequest;
 import requestAndResult.ListGamesResult;
+import service.ClearService;
+import service.GameService;
+import service.UserService;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

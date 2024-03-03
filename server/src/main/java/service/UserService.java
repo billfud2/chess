@@ -8,7 +8,7 @@ import model.AuthData;
 import model.UserData;
 
 public class UserService {
-    DataAccess data = DataAccess.getInstance();
+    public DataAccess data = DataAccess.getInstance();
 
     public UserService() {
     }
