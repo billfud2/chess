@@ -1,4 +1,4 @@
-package serviceTests;
+package serverTests;
 
 import dataAccess.AlreadyTakenException;
 import dataAccess.BadRequestException;

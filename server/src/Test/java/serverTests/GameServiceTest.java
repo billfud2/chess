@@ -1,4 +1,4 @@
-package serviceTests;
+package serverTests;
 
 import chess.ChessGame;
 import dataAccess.AlreadyTakenException;
