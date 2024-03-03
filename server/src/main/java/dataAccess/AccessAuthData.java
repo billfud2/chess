@@ -29,7 +29,11 @@ public class AccessAuthData {
             throw new DataAccessException("Error: unauthorized");
         }
     }
-    public void deleteAuth(String authToken){
-        allAuthData.remove(authToken);
+    public void deleteAuth(String authToken) throws DataAccessException {
+        if (allAuthData.containsKey(authToken)) {
+            allAuthData.remove(authToken);
+        }else {
+            throw new DataAccessException("unauthorized");
+        }
     }
 }

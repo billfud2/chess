@@ -29,13 +29,13 @@ class ClearServiceTest {
     @Test
     void clearAll() throws DataAccessException, BadRequestException, AlreadyTakenException {
         AuthData auth = serve.register(uData);
-        CreateGameResult resID = gServe.createGame(new CreateGameRequest("best game", auth.authToken()));
-        gServe.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE, 0, auth.authToken()));
-        ListGamesResult resGam = gServe.listGames(new AuthData(auth.authToken(),null));
+        CreateGameResult resID = gServe.createGame("best game", auth.authToken());
+        gServe.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE, 1), auth.authToken());
+        ListGamesResult resGam = gServe.listGames(auth.authToken());
         System.out.println(resGam.games());
         AuthData auth2 = serve.register(uData2);
-        gServe.joinGame(new JoinGameRequest(ChessGame.TeamColor.BLACK, 0, auth2.authToken()));
-        resGam = gServe.listGames(new AuthData(auth.authToken(),null));
+        gServe.joinGame(new JoinGameRequest(ChessGame.TeamColor.BLACK, 1), auth2.authToken());
+        resGam = gServe.listGames(auth.authToken());
         System.out.println(resGam.games());
         cServe.clearAll();
         assert cServe.data.gameDataAccess.allGameData.isEmpty();

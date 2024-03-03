@@ -2,5 +2,5 @@ package requestAndResult;
 
 import chess.ChessGame;
 
-public record JoinGameRequest(ChessGame.TeamColor playerColor, int gameID, String authToken) {
+public record JoinGameRequest(ChessGame.TeamColor playerColor, Integer gameID) {
 }

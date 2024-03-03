@@ -54,10 +54,20 @@ public class UserHandler {
             return body;
         }
     }
-    public String handleLogout(Request reqData){
-        AuthData request = (AuthData)gson.fromJson(reqData.headers("authorization"), AuthData.class);
-        serve.logout(request);
-        return gson.toJson(null);
+    public String handleLogout(Request req, Response res ) throws DataAccessException {
+        try {
+            String request = req.headers("authorization");
+            serve.logout(request);
+            return gson.toJson(null);
+        }catch (DataAccessException e){
+            var body = gson.toJson(Map.of("message", String.format("Error: %s", e.getMessage())));
+            res.status(401);
+            return body;
+        }catch (Exception e){
+            var body = gson.toJson(Map.of("message", String.format("Error: %s", e.getMessage())));
+            res.status(500);
+            return body;
+        }
     }
     public static UserHandler getInstance() {
         if (instance == null) {

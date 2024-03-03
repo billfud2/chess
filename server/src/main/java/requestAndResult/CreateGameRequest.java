@@ -1,4 +1,4 @@
 package requestAndResult;
 
-public record CreateGameRequest(String gameName, String authToken) {
+public record CreateGameRequest(String gameName) {
 }

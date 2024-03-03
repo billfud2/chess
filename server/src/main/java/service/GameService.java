@@ -1,6 +1,8 @@
 package service;
 
 import chess.ChessGame;
+import dataAccess.AlreadyTakenException;
+import dataAccess.BadRequestException;
 import dataAccess.DataAccess;
 
 import java.util.Collection;
@@ -18,21 +20,24 @@ public class GameService {
     public GameService() {
     }
 
-    public ListGamesResult listGames(AuthData auth) throws DataAccessException {
-        data.authDataAccess.getAuth(auth.authToken());
+    public ListGamesResult listGames(String auth) throws DataAccessException {
+        data.authDataAccess.getAuth(auth);
         return new ListGamesResult(data.gameDataAccess.listGames());
     }
 
-    public CreateGameResult createGame(CreateGameRequest gameReq) throws DataAccessException {
-        data.authDataAccess.getAuth(gameReq.authToken());
-        return new CreateGameResult(data.gameDataAccess.createGame(gameReq.gameName()));
+    public CreateGameResult createGame(String gameName, String authToken) throws DataAccessException, BadRequestException {
+        data.authDataAccess.getAuth(authToken);
+        return new CreateGameResult(data.gameDataAccess.createGame(gameName));
     }
 
-    public void joinGame(JoinGameRequest joinReq) throws DataAccessException {
-        String username = data.authDataAccess.getAuth(joinReq.authToken()).username();
+    public void joinGame(JoinGameRequest joinReq, String authToken) throws DataAccessException, BadRequestException, AlreadyTakenException {
+        String username = data.authDataAccess.getAuth(authToken).username();
+        if (!data.gameDataAccess.allGameData.containsKey(joinReq.gameID())){
+            throw new BadRequestException("bad request");
+        }
         if (joinReq.playerColor() == ChessGame.TeamColor.WHITE){
             data.gameDataAccess.addWhitePlayer(username, joinReq.gameID());
-        }else{
+        } else if (joinReq.playerColor() == ChessGame.TeamColor.BLACK) {
             data.gameDataAccess.addBlackPlayer(username, joinReq.gameID());
         }
     }

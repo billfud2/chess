@@ -23,7 +23,7 @@ public class UserService {
         }
         throw new DataAccessException("unauthorized");
     }
-    public void logout(AuthData auth) {
-        data.authDataAccess.deleteAuth(auth.authToken());
+    public void logout(String authToken) throws DataAccessException {
+        data.authDataAccess.deleteAuth(authToken);
     }
 }
