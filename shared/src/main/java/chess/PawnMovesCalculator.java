@@ -25,7 +25,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
                 ChessPiece spot = board.getPiece(new ChessPosition(row, col));
                 if (spot == null) {
                     if (row == 8) {
-                        Promotion(myPosition, position);
+                        promotion(myPosition, position);
                     }else {
                     this.possible.add(new ChessMove(myPosition, position, null));
                     }
@@ -51,7 +51,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
                 ChessPiece spot = board.getPiece(new ChessPosition(row, col));
                 if (spot != null && spot.getTeamColor() == ChessGame.TeamColor.BLACK) {
                     if (row == 8) {
-                        Promotion(myPosition, position);
+                        promotion(myPosition, position);
                     }else {
                         this.possible.add(new ChessMove(myPosition, position, null));
                     }
@@ -68,7 +68,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
                 ChessPiece spot = board.getPiece(new ChessPosition(row,col));
                 if (spot != null && spot.getTeamColor() == ChessGame.TeamColor.BLACK){
                     if (row == 8) {
-                        Promotion(myPosition, position);
+                        promotion(myPosition, position);
                     }else {
                         this.possible.add(new ChessMove(myPosition, position, null));
                     }
@@ -88,7 +88,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
                 ChessPiece spot = board.getPiece(new ChessPosition(row, col));
                 if (spot == null) {
                     if (row == 1) {
-                        Promotion(myPosition, position);
+                        promotion(myPosition, position);
                     }else {
                         this.possible.add(new ChessMove(myPosition, position, null));
                     }
@@ -115,7 +115,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
                 ChessPiece spot = board.getPiece(new ChessPosition(row, col));
                 if (spot != null && spot.getTeamColor() == ChessGame.TeamColor.WHITE) {
                     if (row == 1) {
-                        Promotion(myPosition, position);
+                        promotion(myPosition, position);
                     }else {
                         this.possible.add(new ChessMove(myPosition, position, null));
                     }
@@ -132,7 +132,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
                 ChessPiece spot = board.getPiece(new ChessPosition(row, col));
                 if (spot != null && spot.getTeamColor() == ChessGame.TeamColor.WHITE) {
                     if (row == 1) {
-                        Promotion(myPosition, position);
+                        promotion(myPosition, position);
                     }else {
                         this.possible.add(new ChessMove(myPosition, position, null));
                     }
@@ -141,7 +141,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
         }
         return this.possible;
     }
-    public void Promotion(ChessPosition start, ChessPosition end){
+    public void promotion(ChessPosition start, ChessPosition end){
         this.possible.add(new ChessMove(start, end, ChessPiece.PieceType.ROOK));
         this.possible.add(new ChessMove(start, end, ChessPiece.PieceType.BISHOP));
         this.possible.add(new ChessMove(start, end, ChessPiece.PieceType.KNIGHT));

@@ -355,7 +355,7 @@ public class ChessGameTests {
 
     @ParameterizedTest
     @EnumSource(value = ChessPiece.PieceType.class, names = {"QUEEN", "ROOK", "KNIGHT", "BISHOP"})
-    @DisplayName("Pawn Promotion")
+    @DisplayName("Pawn promotion")
     public void promotionMoves(ChessPiece.PieceType promotionType) throws InvalidMoveException {
         var game = getNewGame();
         game.setBoard(loadBoard("""
