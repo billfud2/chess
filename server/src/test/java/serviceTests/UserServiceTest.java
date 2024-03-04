@@ -1,4 +1,4 @@
-package passoffTests.serverTests;
+package serviceTests;
 
 import dataAccess.AlreadyTakenException;
 import dataAccess.BadRequestException;
