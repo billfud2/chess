@@ -36,11 +36,11 @@ class ClearServiceTest {
         cServe.clearAll();
         AuthData auth = serve.register(uData);
         CreateGameResult resID = gServe.createGame("best game", auth.authToken());
-        gServe.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE, 1), auth.authToken());
+        gServe.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE, resID.gameID()), auth.authToken());
         ListGamesResult resGam = gServe.listGames(auth.authToken());
         System.out.println(resGam.games());
         AuthData auth2 = serve.register(uData2);
-        gServe.joinGame(new JoinGameRequest(ChessGame.TeamColor.BLACK, 1), auth2.authToken());
+        gServe.joinGame(new JoinGameRequest(ChessGame.TeamColor.BLACK, resID.gameID()), auth2.authToken());
         resGam = gServe.listGames(auth.authToken());
         System.out.println(resGam.games());
         cServe.clearAll();
