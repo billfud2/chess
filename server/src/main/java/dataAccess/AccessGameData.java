@@ -29,11 +29,6 @@ public class AccessGameData {
     public Collection<GameData> listGames(){
         return allGameData.values();
     }
-    private void updateGame(int gameID, GameData newGame){
-        allGameData.put(gameID, newGame);
-
-
-    }
 
     public void addBlackPlayer(String username, int gameID) throws AlreadyTakenException {
         GameData gam = allGameData.get(gameID);
