@@ -2,14 +2,13 @@ package chess;
 import java.util.Collection;
 import java.util.HashSet;
 
-public class KingMovesCalculator implements PieceMovesCalculator{
+public class KingMovesCalculator extends PieceMovesCalculator{
     Collection<ChessMove> possible;
     ChessPosition position;
     ChessPiece myPiece;
     public KingMovesCalculator() {
         this.possible = new HashSet<>();
     }
-    @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         myPiece = board.getPiece(myPosition);
         int row = myPosition.getRow();

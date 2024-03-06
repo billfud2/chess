@@ -3,14 +3,14 @@ package chess;
 import java.util.Collection;
 import java.util.HashSet;
 
-public class PawnMovesCalculator implements PieceMovesCalculator{
+public class PawnMovesCalculator extends PieceMovesCalculator{
     Collection<ChessMove> possible;
     ChessPosition position;
     ChessPiece myPiece;
     public PawnMovesCalculator() {
         this.possible = new HashSet<>();
     }
-    @Override
+
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         myPiece = board.getPiece(myPosition);
         int row = myPosition.getRow();

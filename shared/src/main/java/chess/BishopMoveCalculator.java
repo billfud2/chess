@@ -3,7 +3,7 @@ package chess;
 import java.util.Collection;
 import java.util.HashSet;
 
-public class BishopMoveCalculator implements PieceMovesCalculator {
+public class BishopMoveCalculator extends PieceMovesCalculator {
     Collection<ChessMove> possible;
     ChessPosition position;
     ChessPiece myPiece;
@@ -11,8 +11,11 @@ public class BishopMoveCalculator implements PieceMovesCalculator {
     public BishopMoveCalculator() {
         this.possible = new HashSet<>();
     }
-    @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
+        bishopMoves(board, myPosition, this.possible);
+        return this.possible;
+    }
+    public void bishopMoves(ChessBoard board, ChessPosition myPosition, Collection<ChessMove> possible){
         myPiece = board.getPiece(myPosition);
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
@@ -24,11 +27,11 @@ public class BishopMoveCalculator implements PieceMovesCalculator {
             position = new ChessPosition(row,col);
             ChessPiece spot = board.getPiece(new ChessPosition(row,col));
             if (spot == null) {
-                this.possible.add(new ChessMove(myPosition,position,null));
+                possible.add(new ChessMove(myPosition,position,null));
             } else if (spot.getTeamColor() == myPiece.getTeamColor()) {
                 break;
             } else{
-                this.possible.add(new ChessMove(myPosition,position,null));
+                possible.add(new ChessMove(myPosition,position,null));
                 break;
             }
         }
@@ -42,11 +45,11 @@ public class BishopMoveCalculator implements PieceMovesCalculator {
             position = new ChessPosition(row,col);
             ChessPiece spot = board.getPiece(new ChessPosition(row,col));
             if (spot == null) {
-                this.possible.add(new ChessMove(myPosition,position,null));
+                possible.add(new ChessMove(myPosition,position,null));
             } else if (spot.getTeamColor() == myPiece.getTeamColor()) {
                 break;
             } else{
-                this.possible.add(new ChessMove(myPosition,position,null));
+                possible.add(new ChessMove(myPosition,position,null));
                 break;
             }
         }
@@ -60,11 +63,11 @@ public class BishopMoveCalculator implements PieceMovesCalculator {
             position = new ChessPosition(row,col);
             ChessPiece spot = board.getPiece(new ChessPosition(row,col));
             if (spot == null) {
-                this.possible.add(new ChessMove(myPosition,position,null));
+                possible.add(new ChessMove(myPosition,position,null));
             } else if (spot.getTeamColor() == myPiece.getTeamColor()) {
                 break;
             } else{
-                this.possible.add(new ChessMove(myPosition,position,null));
+                possible.add(new ChessMove(myPosition,position,null));
                 break;
             }
         }
@@ -78,14 +81,13 @@ public class BishopMoveCalculator implements PieceMovesCalculator {
             position = new ChessPosition(row,col);
             ChessPiece spot = board.getPiece(new ChessPosition(row,col));
             if (spot == null) {
-                this.possible.add(new ChessMove(myPosition,position,null));
+                possible.add(new ChessMove(myPosition,position,null));
             } else if (spot.getTeamColor() == myPiece.getTeamColor()) {
                 break;
             } else{
-                this.possible.add(new ChessMove(myPosition,position,null));
+                possible.add(new ChessMove(myPosition,position,null));
                 break;
             }
         }
-        return this.possible;
     }
 }

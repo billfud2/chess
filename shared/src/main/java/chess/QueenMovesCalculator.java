@@ -3,156 +3,21 @@ package chess;
 import java.util.Collection;
 import java.util.HashSet;
 
-public class QueenMovesCalculator implements PieceMovesCalculator{
+public class QueenMovesCalculator extends PieceMovesCalculator{
     Collection<ChessMove> possible;
     ChessPosition position;
     ChessPiece myPiece;
+    RookMovesCalculator rook;
+    BishopMoveCalculator bishop;
     public QueenMovesCalculator() {
         this.possible = new HashSet<>();
+        rook = new RookMovesCalculator();
+        bishop = new BishopMoveCalculator();
     }
-    @Override
+
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        myPiece = board.getPiece(myPosition);
-        int row = myPosition.getRow();
-        int col = myPosition.getColumn();
-        // Getting all possible moves moving to the top
-        while(row<8){
-            row++;
-            // System.out.println("Queen Position: {" + row + "," + col + "}");
-            position = new ChessPosition(row,col);
-            ChessPiece spot = board.getPiece(new ChessPosition(row,col));
-            if (spot == null) {
-                this.possible.add(new ChessMove(myPosition,position,null));
-            } else if (spot.getTeamColor() == myPiece.getTeamColor()) {
-                break;
-            } else{
-                this.possible.add(new ChessMove(myPosition,position,null));
-                break;
-            }
-        }
-        // Getting all possible moves moving to the right
-        row = myPosition.getRow();
-        col = myPosition.getColumn();
-        while(col<8){
-            col++;
-            // System.out.println("Queen Position: {" + row + "," + col + "}");
-            position = new ChessPosition(row,col);
-            ChessPiece spot = board.getPiece(new ChessPosition(row,col));
-            if (spot == null) {
-                this.possible.add(new ChessMove(myPosition,position,null));
-            } else if (spot.getTeamColor() == myPiece.getTeamColor()) {
-                break;
-            } else{
-                this.possible.add(new ChessMove(myPosition,position,null));
-                break;
-            }
-        }
-        row = myPosition.getRow();
-        col = myPosition.getColumn();
-        // Getting all possible moves moving to bottom
-        while(row>1){
-            row--;
-            // System.out.println("Queen Position: {" + row + "," + col + "}");
-            position = new ChessPosition(row,col);
-            ChessPiece spot = board.getPiece(new ChessPosition(row,col));
-            if (spot == null) {
-                this.possible.add(new ChessMove(myPosition,position,null));
-            } else if (spot.getTeamColor() == myPiece.getTeamColor()) {
-                break;
-            } else{
-                this.possible.add(new ChessMove(myPosition,position,null));
-                break;
-            }
-        }
-        row = myPosition.getRow();
-        col = myPosition.getColumn();
-        // Getting all possible moves moving to left
-        while(col>1){
-            col--;
-            // System.out.println("Queen Position: {" + row + "," + col + "}");
-            position = new ChessPosition(row,col);
-            ChessPiece spot = board.getPiece(new ChessPosition(row,col));
-            if (spot == null) {
-                this.possible.add(new ChessMove(myPosition,position,null));
-            } else if (spot.getTeamColor() == myPiece.getTeamColor()) {
-                break;
-            } else{
-                this.possible.add(new ChessMove(myPosition,position,null));
-                break;
-            }
-        }
-        row = myPosition.getRow();
-        col = myPosition.getColumn();
-        // Getting all possible moves moving to the top left corner
-        while(row<8 && col>1){
-            row++;
-            col--;
-            // System.out.println("Queen Position: {" + row + "," + col + "}");
-            position = new ChessPosition(row,col);
-            ChessPiece spot = board.getPiece(new ChessPosition(row,col));
-            if (spot == null) {
-                this.possible.add(new ChessMove(myPosition,position,null));
-            } else if (spot.getTeamColor() == myPiece.getTeamColor()) {
-                break;
-            } else{
-                this.possible.add(new ChessMove(myPosition,position,null));
-                break;
-            }
-        }
-        // Getting all possible moves moving to the top right corner
-        row = myPosition.getRow();
-        col = myPosition.getColumn();
-        while(row<8 && col<8){
-            row++;
-            col++;
-            // System.out.println("Queen Position: {" + row + "," + col + "}");
-            position = new ChessPosition(row,col);
-            ChessPiece spot = board.getPiece(new ChessPosition(row,col));
-            if (spot == null) {
-                this.possible.add(new ChessMove(myPosition,position,null));
-            } else if (spot.getTeamColor() == myPiece.getTeamColor()) {
-                break;
-            } else{
-                this.possible.add(new ChessMove(myPosition,position,null));
-                break;
-            }
-        }
-        row = myPosition.getRow();
-        col = myPosition.getColumn();
-        // Getting all possible moves moving to bottom right corner
-        while(row>1 && col<8){
-            row--;
-            col++;
-            // System.out.println("Queen Position: {" + row + "," + col + "}");
-            position = new ChessPosition(row,col);
-            ChessPiece spot = board.getPiece(new ChessPosition(row,col));
-            if (spot == null) {
-                this.possible.add(new ChessMove(myPosition,position,null));
-            } else if (spot.getTeamColor() == myPiece.getTeamColor()) {
-                break;
-            } else{
-                this.possible.add(new ChessMove(myPosition,position,null));
-                break;
-            }
-        }
-        row = myPosition.getRow();
-        col = myPosition.getColumn();
-        // Getting all possible moves moving to bottom left corner
-        while(row>1 && col>1){
-            row--;
-            col--;
-            // System.out.println("Queen Position: {" + row + "," + col + "}");
-            position = new ChessPosition(row,col);
-            ChessPiece spot = board.getPiece(new ChessPosition(row,col));
-            if (spot == null) {
-                this.possible.add(new ChessMove(myPosition,position,null));
-            } else if (spot.getTeamColor() == myPiece.getTeamColor()) {
-                break;
-            } else{
-                this.possible.add(new ChessMove(myPosition,position,null));
-                break;
-            }
-        }
+        rook.rookMoves(board, myPosition, this.possible);
+        bishop.bishopMoves(board, myPosition, this.possible);
         return this.possible;
     }
 }
