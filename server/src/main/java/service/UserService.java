@@ -18,8 +18,8 @@ public class UserService {
         return AccessAuthData.createAuth(user.username());
     }
     public AuthData login(UserData user) throws DataAccessException {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        if (encoder.matches(user.password(), AccessUserData.getUser(user.username()).password())){
+
+        if (AccessUserData.getUser(user.username()) != null && AccessUserData.encoder.matches(user.password(), AccessUserData.getUser(user.username()).password())){
             return AccessAuthData.createAuth(user.username());
         }
         throw new DataAccessException("unauthorized");

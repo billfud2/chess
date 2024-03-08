@@ -90,6 +90,9 @@ public class AccessGameData {
         if(getGame(gameID) == null){
             throw new BadRequestException("bad request");
         }
+        if(getGame(gameID).blackUsername() != null){
+            throw new AlreadyTakenException("already taken");
+        }
         try (var preparedStatement = conn.prepareStatement("UPDATE game SET blackUsername=? WHERE gameID=?")) {
             preparedStatement.setString(1, username);
             preparedStatement.setInt(2, gameID);
@@ -101,6 +104,9 @@ public class AccessGameData {
     public static void addWhitePlayer(String username, int gameID) throws AlreadyTakenException, BadRequestException, DataAccessException {
         if(getGame(gameID) == null){
             throw new BadRequestException("bad request");
+        }
+        if(getGame(gameID).whiteUsername() != null){
+            throw new AlreadyTakenException("already taken");
         }
         try (var preparedStatement = conn.prepareStatement("UPDATE game SET whiteUsername=? WHERE gameID=?")) {
             preparedStatement.setString(1, username);

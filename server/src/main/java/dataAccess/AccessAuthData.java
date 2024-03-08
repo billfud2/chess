@@ -61,7 +61,7 @@ public class AccessAuthData {
         if(getAuth(authToken).authToken() == null){
             throw new DataAccessException("unauthorized");
         }
-        try (var preparedStatement = conn.prepareStatement("DELETE FROM auth WHERE type=?")) {
+        try (var preparedStatement = conn.prepareStatement("DELETE FROM auth WHERE authToken=?")) {
             preparedStatement.setString(1, authToken);
             preparedStatement.executeUpdate();
         }catch (SQLException e) {

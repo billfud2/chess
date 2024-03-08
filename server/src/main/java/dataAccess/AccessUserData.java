@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class AccessUserData {
+    public static BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
     private static Connection conn;
 
     static {
@@ -34,7 +35,6 @@ public class AccessUserData {
         if (username == null || password == null || email == null) {
             throw new BadRequestException("bad request");
         }
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String hashedPassword = encoder.encode(password);
         try (var preparedStatement = conn.prepareStatement("INSERT INTO user (username, password, email) VALUES(?, ?, ?)")) {
             preparedStatement.setString(1, username);
