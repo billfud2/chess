@@ -65,7 +65,7 @@ public class AccessGameData {
         try (var preparedStatement = conn.prepareStatement("SELECT * FROM game WHERE gameID=?")) {
             preparedStatement.setInt(1, gameID);
             var rs = preparedStatement.executeQuery();
-            return new GameData(rs.getInt("gameID"), rs.getString("whiteUsername"), rs.getString("blackUsername"), rs.getString("gameName"), gson.fromJson(rs.getString("game"), ChessGame.class))
+            return new GameData(rs.getInt("gameID"), rs.getString("whiteUsername"), rs.getString("blackUsername"), rs.getString("gameName"), gson.fromJson(rs.getString("game"), ChessGame.class));
         } catch (SQLException e) {
             throw new DataAccessException("unauthorized");
         }
@@ -83,7 +83,7 @@ public class AccessGameData {
             throw new DataAccessException("unauthorized");
         }
     }
-    public void addWhitePlayer(String username, int gameID) throws AlreadyTakenException, BadRequestException, DataAccessException {
+    public static void addWhitePlayer(String username, int gameID) throws AlreadyTakenException, BadRequestException, DataAccessException {
         if(getGame(gameID).whiteUsername() != null){
             throw new AlreadyTakenException("already taken");
         }

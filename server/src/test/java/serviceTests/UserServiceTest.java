@@ -1,5 +1,6 @@
 package serviceTests;
 
+import dataAccess.AccessAuthData;
 import dataAccess.AlreadyTakenException;
 import dataAccess.BadRequestException;
 import dataAccess.DataAccessException;
@@ -24,7 +25,7 @@ class UserServiceTest {
     }
 
     @BeforeEach
-    public void setup(){
+    public void setup() throws Exception {
         cServe.clearAll();
     }
     @Test
@@ -77,7 +78,7 @@ class UserServiceTest {
         AuthData authLog = serve.login(new UserData(username, password,null));
         System.out.println("{authToken: " + authLog.authToken() + ", username: " + authLog.username() + '}');
         serve.logout(authLog.authToken());
-        assert serve.data.authDataAccess.allAuthData.get(authLog) == null;
+        assert AccessAuthData.getAuth(authLog.authToken()) == null;
     }
     @Test
     void badLogout() throws DataAccessException, BadRequestException, AlreadyTakenException {

@@ -49,7 +49,7 @@ public class DatabaseManager {
             var createUserTable = """
             CREATE TABLE IF NOT EXISTS user (
                 username VARCHAR(50) NOT NULL,
-                password VARCHAR(50) NOT NULL,
+                password VARCHAR(500) NOT NULL,
                 email VARCHAR(50) NOT NULL
             )""";
             try (var createUserStatement = conn.prepareStatement(createUserTable)) {
@@ -93,7 +93,7 @@ public class DatabaseManager {
      * }
      * </code>
      */
-    static Connection getConnection() throws DataAccessException {
+    public static Connection getConnection() throws DataAccessException {
         try {
             var conn = DriverManager.getConnection(connectionUrl, user, password);
             conn.setCatalog(databaseName);

@@ -1,10 +1,7 @@
 package serviceTests;
 
 import chess.ChessGame;
-import dataAccess.AlreadyTakenException;
-import dataAccess.BadRequestException;
-import dataAccess.DataAccess;
-import dataAccess.DataAccessException;
+import dataAccess.*;
 import model.AuthData;
 import model.UserData;
 import org.junit.jupiter.api.Order;
@@ -36,7 +33,7 @@ class ClearServiceTest {
 
     @Test
     @Order(1)
-    void clearAll() throws DataAccessException, BadRequestException, AlreadyTakenException {
+    void clearAll() throws Exception {
         cServe.clearAll();
         AuthData auth = serve.register(uData);
         CreateGameResult resID = gServe.createGame("best game", auth.authToken());
@@ -48,6 +45,5 @@ class ClearServiceTest {
         resGam = gServe.listGames(auth.authToken());
         System.out.println(resGam.games());
         cServe.clearAll();
-
     }
 }

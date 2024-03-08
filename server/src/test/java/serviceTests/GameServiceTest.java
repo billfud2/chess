@@ -1,10 +1,7 @@
 package serviceTests;
 
 import chess.ChessGame;
-import dataAccess.AlreadyTakenException;
-import dataAccess.BadRequestException;
-import dataAccess.DataAccess;
-import dataAccess.DataAccessException;
+import dataAccess.*;
 import model.AuthData;
 import model.UserData;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,7 +38,7 @@ class GameServiceTest {
     }
 
     @BeforeEach
-    public void setup(){
+    public void setup() throws Exception {
         cServe.clearAll();
     }
     @Test
@@ -97,8 +94,8 @@ class GameServiceTest {
         gServe.joinGame(new JoinGameRequest(ChessGame.TeamColor.BLACK, 1), auth2.authToken());
         resGam = gServe.listGames(auth.authToken());
         System.out.println(resGam.games());
-        assert dB.gameDataAccess.allGameData.get(resID.gameID()).whiteUsername() == username;
-        assert dB.gameDataAccess.allGameData.get(resID.gameID()).blackUsername() == username2;
+        assert AccessGameData.getGame(resID.gameID()).whiteUsername().equals(username);
+        assert AccessGameData.getGame(resID.gameID()).blackUsername().equals(username2);
     }
     @Test
     void badJoinGame() throws DataAccessException, BadRequestException, AlreadyTakenException {

@@ -31,13 +31,13 @@ public class GameService {
 
     public void joinGame(JoinGameRequest joinReq, String authToken) throws DataAccessException, BadRequestException, AlreadyTakenException {
         String username = AccessAuthData.getAuth(authToken).username();
-        if (!data.gameDataAccess.allGameData.containsKey(joinReq.gameID())){
+        if (AccessGameData.getGame(joinReq.gameID()).gameName() == null){
             throw new BadRequestException("bad request");
         }
         if (joinReq.playerColor() == ChessGame.TeamColor.WHITE){
-            data.gameDataAccess.addWhitePlayer(username, joinReq.gameID());
+            AccessGameData.addWhitePlayer(username, joinReq.gameID());
         } else if (joinReq.playerColor() == ChessGame.TeamColor.BLACK) {
-            data.gameDataAccess.addBlackPlayer(username, joinReq.gameID());
+            AccessGameData.addBlackPlayer(username, joinReq.gameID());
         }
     }
 }
