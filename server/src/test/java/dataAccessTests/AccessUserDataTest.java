@@ -27,6 +27,8 @@ class AccessUserDataTest {
     void clear() {
         try {
             AccessUserData.clear();
+            AccessUserData.createUser(uData.username(), uData.password(), uData.email());
+            AccessUserData.clear();
             try (var preparedStatement = conn.prepareStatement("SELECT * FROM user")) {
                 var rs = preparedStatement.executeQuery();
                 if(rs.next()){
@@ -51,6 +53,7 @@ class AccessUserDataTest {
             AccessUserData.clear();
             AccessUserData.createUser(uData.username(), uData.password(), uData.email());
             AccessUserData.createUser(uData.username(), uData.password(), uData.email());
+            assert false;
         }catch (AlreadyTakenException e){
             assert true;
         }catch(Exception e){
@@ -58,8 +61,6 @@ class AccessUserDataTest {
         }
 
     }
-
-
 
     @Test
     void getUser() throws Exception {

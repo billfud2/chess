@@ -23,7 +23,7 @@ public class AccessAuthData {
     public AccessAuthData() throws DataAccessException {
     }
     static public void clear() throws Exception {
-        try (var preparedStatement = conn.prepareStatement("TURNCATE TABLE auth")) {
+        try (var preparedStatement = conn.prepareStatement("TRUNCATE TABLE auth")) {
             preparedStatement.executeUpdate();
         }
         catch (SQLException e) {
@@ -32,6 +32,9 @@ public class AccessAuthData {
     }
     static public AuthData createAuth(String username) throws DataAccessException {
         String authToken =  UUID.randomUUID().toString();
+        if(AccessUserData.getUser(username) == null){
+            throw new DataAccessException("unauthorized");
+        }
         try (var preparedStatement = conn.prepareStatement("INSERT INTO auth (username, authToken) VALUES(?, ?)")) {
             preparedStatement.setString(1, username);
             preparedStatement.setString(2, authToken);
@@ -42,16 +45,16 @@ public class AccessAuthData {
         }
     }
     static public AuthData getAuth(String authToken) throws DataAccessException {
-        try (var preparedStatement = conn.prepareStatement("SELECT username, authToken FROM auth WHERE type=?")) {
+        try (var preparedStatement = conn.prepareStatement("SELECT username, authToken FROM auth WHERE authToken=?")) {
             preparedStatement.setString(1, authToken);
             var rs = preparedStatement.executeQuery();
             if(rs.next()){
                 return new AuthData(authToken ,rs.getString("username"));
             }else{
-                throw new DataAccessException("Error: unauthorized");
+                throw new DataAccessException("unauthorized");
             }
         } catch (SQLException e) {
-            throw new DataAccessException("unauthorized");
+            throw new DataAccessException(e.getMessage());
         }
     }
     static public void deleteAuth(String authToken) throws DataAccessException {
