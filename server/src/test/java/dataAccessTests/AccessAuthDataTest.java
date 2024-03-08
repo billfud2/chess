@@ -17,6 +17,7 @@ class AccessAuthDataTest {
     private static Connection conn;
     static {
         try {
+            DatabaseManager.createDatabase();
             conn = DatabaseManager.getConnection();
         } catch (DataAccessException e) {
             throw new RuntimeException(e);
@@ -26,6 +27,8 @@ class AccessAuthDataTest {
     void clear() {
         try {
             AccessAuthData.clear();
+            AccessUserData.clear();
+            AccessUserData.createUser(uData.username(), uData.password(), uData.email());
             AccessAuthData.createAuth(uData.username());
             AccessAuthData.clear();
             try (var preparedStatement = conn.prepareStatement("SELECT * FROM auth")) {
@@ -43,6 +46,8 @@ class AccessAuthDataTest {
     @Test
     void createAuth() throws Exception {
         AccessAuthData.clear();
+        AccessUserData.clear();
+        AccessUserData.createUser(uData.username(), uData.password(), uData.email());
         AuthData auth = AccessAuthData.createAuth(uData.username());
         assert AccessAuthData.getAuth(auth.authToken()).equals(auth);
     }
@@ -61,6 +66,8 @@ class AccessAuthDataTest {
     @Test
     void getAuth() throws Exception {
         AccessAuthData.clear();
+        AccessUserData.clear();
+        AccessUserData.createUser(uData.username(), uData.password(), uData.email());
         AuthData auth = AccessAuthData.createAuth(uData.username());
         assert AccessAuthData.getAuth(auth.authToken()).equals(auth);
     }
