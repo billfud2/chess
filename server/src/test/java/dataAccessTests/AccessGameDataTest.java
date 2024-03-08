@@ -63,6 +63,8 @@ class AccessGameDataTest {
     @Test
     void listGames() throws Exception {
         AccessGameData.clear();
+        AccessUserData.clear();
+        AccessUserData.createUser(uData.username(), uData.password(), uData.email());
         String auth = AccessAuthData.createAuth(uData.username()).authToken();
         int gameID = AccessGameData.createGame(gData.gameName());
         Collection<GameData> games = AccessGameData.listGames(auth);
