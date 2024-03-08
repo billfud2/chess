@@ -58,14 +58,14 @@ public class AccessAuthData {
         }
     }
     static public void deleteAuth(String authToken) throws DataAccessException {
-        if(getAuth(authToken).authToken() != null){
+        if(getAuth(authToken).authToken() == null){
             throw new DataAccessException("unauthorized");
         }
         try (var preparedStatement = conn.prepareStatement("DELETE FROM auth WHERE type=?")) {
             preparedStatement.setString(1, authToken);
             preparedStatement.executeUpdate();
         }catch (SQLException e) {
-            throw new DataAccessException("unauthorized");
+            throw new DataAccessException(e.getMessage());
         }
     }
 }
