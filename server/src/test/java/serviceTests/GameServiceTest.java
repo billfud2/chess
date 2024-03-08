@@ -36,6 +36,10 @@ class GameServiceTest {
     UserService serve = new UserService();
     GameService gServe = new GameService();
     ClearService cServe = new ClearService();
+
+    GameServiceTest() throws DataAccessException {
+    }
+
     @BeforeEach
     public void setup(){
         cServe.clearAll();

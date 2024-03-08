@@ -18,6 +18,10 @@ public class UserHandler {
     static UserHandler instance;
     Gson gson = new Gson();
     UserService serve = new UserService();
+
+    public UserHandler() throws DataAccessException {
+    }
+
     public String handleLogin(Request reqData, Response res) throws DataAccessException {
         try {
             UserData request = (UserData) gson.fromJson(reqData.body(), UserData.class);
@@ -69,7 +73,7 @@ public class UserHandler {
             return body;
         }
     }
-    public static UserHandler getInstance() {
+    public static UserHandler getInstance() throws DataAccessException {
         if (instance == null) {
             instance = new UserHandler();
         }

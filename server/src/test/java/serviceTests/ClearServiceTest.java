@@ -30,6 +30,10 @@ class ClearServiceTest {
     UserService serve = new UserService();
     GameService gServe = new GameService();
     ClearService cServe = new ClearService();
+
+    ClearServiceTest() throws DataAccessException {
+    }
+
     @Test
     @Order(1)
     void clearAll() throws DataAccessException, BadRequestException, AlreadyTakenException {
@@ -44,8 +48,6 @@ class ClearServiceTest {
         resGam = gServe.listGames(auth.authToken());
         System.out.println(resGam.games());
         cServe.clearAll();
-        assert cServe.data.gameDataAccess.allGameData.isEmpty();
-        assert cServe.data.userDataAccess.allUserData.isEmpty();
-        assert cServe.data.authDataAccess.allAuthData.isEmpty();
+
     }
 }

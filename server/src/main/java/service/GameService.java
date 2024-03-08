@@ -15,9 +15,11 @@ import requestAndResult.CreateGameResult;
 import requestAndResult.JoinGameRequest;
 import requestAndResult.ListGamesResult;
 
+import static dataAccess.DatabaseManager.createDatabase;
+
 public class GameService {
-    DataAccess data = DataAccess.getInstance();
-    public GameService() {
+    public GameService() throws DataAccessException {
+        createDatabase();
     }
 
     public ListGamesResult listGames(String auth) throws DataAccessException {

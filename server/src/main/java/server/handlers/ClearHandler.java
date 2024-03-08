@@ -1,6 +1,7 @@
 package server.handlers;
 
 import com.google.gson.Gson;
+import dataAccess.DataAccessException;
 import service.ClearService;
 import spark.Response;
 import spark.Route;
@@ -11,6 +12,10 @@ public class ClearHandler {
     static ClearHandler instance;
     Gson gson = new Gson();
     ClearService serve = new ClearService();
+
+    public ClearHandler() throws DataAccessException {
+    }
+
     public String handleClear(Response res){
         try {
             serve.clearAll();
@@ -21,7 +26,7 @@ public class ClearHandler {
             return body;
         }
     }
-    public static ClearHandler getInstance() {
+    public static ClearHandler getInstance() throws DataAccessException {
         if (instance == null) {
             instance = new ClearHandler();
         }

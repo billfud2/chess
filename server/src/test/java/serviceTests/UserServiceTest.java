@@ -19,6 +19,10 @@ class UserServiceTest {
     UserData uData = new UserData(username, password, email);
     UserService serve = new UserService();
     ClearService cServe = new ClearService();
+
+    UserServiceTest() throws DataAccessException {
+    }
+
     @BeforeEach
     public void setup(){
         cServe.clearAll();

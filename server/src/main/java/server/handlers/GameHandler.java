@@ -22,7 +22,11 @@ public class GameHandler {
     static GameHandler instance;
     Gson gson = new Gson();
     GameService serve = new GameService();
-    public static GameHandler getInstance() {
+
+    public GameHandler() throws DataAccessException {
+    }
+
+    public static GameHandler getInstance() throws DataAccessException {
         if (instance == null) {
             instance = new GameHandler();
         }

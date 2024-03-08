@@ -9,6 +9,7 @@ public class DatabaseManager {
     private static final String password;
     private static final String connectionUrl;
 
+
     /*
      * Load the database information for the db.properties file.
      */
@@ -32,16 +33,63 @@ public class DatabaseManager {
     }
 
     /**
-     * Creates the database if it does not already exist.
+     * Creates and configures the database if it does not already exist.
+     *
      */
-    static void createDatabase() throws DataAccessException {
+    public static void createDatabase() throws DataAccessException {
         try {
             var statement = "CREATE DATABASE IF NOT EXISTS " + databaseName;
             var conn = DriverManager.getConnection(connectionUrl, user, password);
             try (var preparedStatement = conn.prepareStatement(statement)) {
                 preparedStatement.executeUpdate();
             }
+            conn.setCatalog(databaseName);
+            var createUserTable = """
+            CREATE TABLE IF NOT EXISTS user (
+                username VARCHAR(50) NOT NULL,
+                password VARCHAR(50) NOT NULL,
+                email VARCHAR(50) NOT NULL
+            )""";
+            try (var createUserStatement = conn.prepareStatement(createUserTable)) {
+                createUserStatement.executeUpdate();
+            }
+            var createAuthTable = """
+            CREATE TABLE  IF NOT EXISTS auth (
+                authToken VARCHAR(50) NOT NULL,
+                username VARCHAR(50) NOT NULL
+            )""";
+            try (var createAuthStatement = conn.prepareStatement(createAuthTable)) {
+                createAuthStatement.executeUpdate();
+            }
+            var createGameTable = """
+            CREATE TABLE  IF NOT EXISTS game (
+                gameID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                whiteUsername VARCHAR(50),
+                blackUsername VARCHAR(50),
+                gameName VARCHAR(50) NOT NULL,
+                game VARCHAR(1000) NOT NULL
+            )""";
+            try (var createGameStatement = conn.prepareStatement(createGameTable)) {
+                createGameStatement.executeUpdate();
+            }
+
         } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage());
+        }
+    }
+    /**
+     *
+     */
+    public static void configureDatabase() throws DataAccessException {
+        createDatabase();
+        try (var conn = DriverManager.getConnection(connectionUrl, user, password)) {
+
+
+
+
+
+
+        }catch (SQLException e) {
             throw new DataAccessException(e.getMessage());
         }
     }

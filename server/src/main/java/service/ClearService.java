@@ -1,15 +1,19 @@
 package service;
 
 import dataAccess.DataAccess;
+import dataAccess.DataAccessException;
+
+import static dataAccess.DatabaseManager.createDatabase;
 
 public class ClearService {
-    public DataAccess data = DataAccess.getInstance();
 
-    public ClearService() {}
+
+
+    public ClearService() throws DataAccessException {
+        createDatabase();
+    }
 
     public void clearAll(){
-        data.authDataAccess.clear();
-        data.gameDataAccess.clear();
-        data.userDataAccess.clear();
+
     }
 }

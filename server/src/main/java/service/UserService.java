@@ -7,10 +7,13 @@ import dataAccess.DataAccessException;
 import model.AuthData;
 import model.UserData;
 
+import static dataAccess.DatabaseManager.createDatabase;
+
 public class UserService {
     public DataAccess data = DataAccess.getInstance();
 
-    public UserService() {
+    public UserService() throws DataAccessException {
+        createDatabase();
     }
 
     public AuthData register(UserData user) throws DataAccessException, BadRequestException, AlreadyTakenException {
