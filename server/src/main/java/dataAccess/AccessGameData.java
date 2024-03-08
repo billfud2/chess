@@ -8,6 +8,7 @@ import model.UserData;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.*;
 
 public class AccessGameData {
@@ -24,7 +25,7 @@ public class AccessGameData {
     public AccessGameData() {
     }
     static public void clear() throws Exception {
-        try (var preparedStatement = conn.prepareStatement("TURNCATE TABLE game")) {
+        try (var preparedStatement = conn.prepareStatement("TRUNCATE TABLE game")) {
             preparedStatement.executeUpdate();
         }
         catch (SQLException e) {
@@ -34,10 +35,18 @@ public class AccessGameData {
     static public Integer createGame(String gameName) throws BadRequestException, DataAccessException {
         if (gameName != null) {
             ChessGame game = new ChessGame();
-            try (var preparedStatement = conn.prepareStatement("INSERT INTO game (gameName, game) VALUES(?, ?, ?)")) {
+            try (var preparedStatement = conn.prepareStatement("INSERT INTO game (gameName, game) VALUES(?, ?)", Statement.RETURN_GENERATED_KEYS)) {
                 preparedStatement.setString(1, gameName);
                 preparedStatement.setString(2, gson.toJson(game));
                 preparedStatement.executeUpdate();
+                var generatedKeys = preparedStatement.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    // Get the value of the auto_increment column
+                    return generatedKeys.getInt(1);
+
+                } else{
+                    throw new DataAccessException("game not created");
+                }
             } catch (SQLException e) {
                 throw new DataAccessException(e.getMessage());
             }
@@ -65,9 +74,13 @@ public class AccessGameData {
         try (var preparedStatement = conn.prepareStatement("SELECT * FROM game WHERE gameID=?")) {
             preparedStatement.setInt(1, gameID);
             var rs = preparedStatement.executeQuery();
-            return new GameData(rs.getInt("gameID"), rs.getString("whiteUsername"), rs.getString("blackUsername"), rs.getString("gameName"), gson.fromJson(rs.getString("game"), ChessGame.class));
+            if(rs.next()) {
+                return new GameData(rs.getInt("gameID"), rs.getString("whiteUsername"), rs.getString("blackUsername"), rs.getString("gameName"), gson.fromJson(rs.getString("game"), ChessGame.class));
+            }else{
+                return null;
+            }
         } catch (SQLException e) {
-            throw new DataAccessException("unauthorized");
+            throw new DataAccessException(e.getMessage());
         }
     }
 
@@ -80,7 +93,7 @@ public class AccessGameData {
             preparedStatement.setInt(2, gameID);
             preparedStatement.executeUpdate();
         }catch (SQLException e) {
-            throw new DataAccessException("unauthorized");
+            throw new DataAccessException(e.getMessage());
         }
     }
     public static void addWhitePlayer(String username, int gameID) throws AlreadyTakenException, BadRequestException, DataAccessException {
@@ -92,7 +105,7 @@ public class AccessGameData {
             preparedStatement.setInt(2, gameID);
             preparedStatement.executeUpdate();
         }catch (SQLException e) {
-            throw new DataAccessException("unauthorized");
+            throw new DataAccessException(e.getMessage());
         }
     }
 }
