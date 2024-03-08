@@ -6,9 +6,7 @@ public class DataAccess {
     public AccessUserData userDataAccess;
     public static DataAccess instance;
     private DataAccess() {
-        this.gameDataAccess = new AccessGameData();
-        this.authDataAccess = new AccessAuthData();
-        this.userDataAccess = new AccessUserData();
+
     }
 
     public static DataAccess getInstance() {

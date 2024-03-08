@@ -7,9 +7,17 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class AccessUserData {
-    private Connection conn = DatabaseManager.getConnection();
+    private static Connection conn;
+
+    static {
+        try {
+            conn = DatabaseManager.getConnection();
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public AccessUserData() throws DataAccessException {    }
-    public void clear() throws Exception {
+    static public void clear() throws Exception {
         try (var preparedStatement = conn.prepareStatement("TURNCATE TABLE user")) {
             preparedStatement.executeUpdate();
         }
@@ -18,7 +26,7 @@ public class AccessUserData {
         }
     }
 
-    public void createUser(String username, String password, String email) throws DataAccessException, BadRequestException, AlreadyTakenException {
+    static public void createUser(String username, String password, String email) throws DataAccessException, BadRequestException, AlreadyTakenException {
         if (getUser(username).username() != null) {
             throw new AlreadyTakenException("already taken");
         }
@@ -34,7 +42,7 @@ public class AccessUserData {
             throw new DataAccessException(e.getMessage());
         }
     }
-    public UserData getUser (String username) throws DataAccessException {
+    static public UserData getUser (String username) throws DataAccessException {
         try (var preparedStatement = conn.prepareStatement("SELECT username, password, email FROM user WHERE type=?")) {
             preparedStatement.setString(1, username);
             var rs = preparedStatement.executeQuery();
