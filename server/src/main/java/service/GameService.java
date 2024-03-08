@@ -1,13 +1,10 @@
 package service;
 
 import chess.ChessGame;
-import dataAccess.AlreadyTakenException;
-import dataAccess.BadRequestException;
-import dataAccess.DataAccess;
+import dataAccess.*;
 
 import java.util.Collection;
 
-import dataAccess.DataAccessException;
 import model.AuthData;
 import model.GameData;
 import requestAndResult.CreateGameRequest;
@@ -23,17 +20,17 @@ public class GameService {
     }
 
     public ListGamesResult listGames(String auth) throws DataAccessException {
-        data.authDataAccess.getAuth(auth);
-        return new ListGamesResult(data.gameDataAccess.listGames());
+        AccessAuthData.getAuth(auth);
+        return new ListGamesResult(AccessGameData.listGames());
     }
 
     public CreateGameResult createGame(String gameName, String authToken) throws DataAccessException, BadRequestException {
-        data.authDataAccess.getAuth(authToken);
-        return new CreateGameResult(data.gameDataAccess.createGame(gameName));
+        AccessAuthData.getAuth(authToken);
+        return new CreateGameResult(AccessGameData.createGame(gameName));
     }
 
     public void joinGame(JoinGameRequest joinReq, String authToken) throws DataAccessException, BadRequestException, AlreadyTakenException {
-        String username = data.authDataAccess.getAuth(authToken).username();
+        String username = AccessAuthData.getAuth(authToken).username();
         if (!data.gameDataAccess.allGameData.containsKey(joinReq.gameID())){
             throw new BadRequestException("bad request");
         }

@@ -10,6 +10,7 @@ public class DatabaseManager {
     private static final String connectionUrl;
 
 
+
     /*
      * Load the database information for the db.properties file.
      */
@@ -40,6 +41,7 @@ public class DatabaseManager {
         try {
             var statement = "CREATE DATABASE IF NOT EXISTS " + databaseName;
             var conn = DriverManager.getConnection(connectionUrl, user, password);
+
             try (var preparedStatement = conn.prepareStatement(statement)) {
                 preparedStatement.executeUpdate();
             }
@@ -77,22 +79,7 @@ public class DatabaseManager {
             throw new DataAccessException(e.getMessage());
         }
     }
-    /**
-     *
-     */
-    public static void configureDatabase() throws DataAccessException {
-        createDatabase();
-        try (var conn = DriverManager.getConnection(connectionUrl, user, password)) {
 
-
-
-
-
-
-        }catch (SQLException e) {
-            throw new DataAccessException(e.getMessage());
-        }
-    }
 
     /**
      * Create a connection to the database and sets the catalog based upon the
