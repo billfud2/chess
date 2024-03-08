@@ -20,8 +20,7 @@ public class GameService {
     }
 
     public ListGamesResult listGames(String auth) throws DataAccessException {
-        AccessAuthData.getAuth(auth);
-        return new ListGamesResult(AccessGameData.listGames());
+        return new ListGamesResult(AccessGameData.listGames(auth));
     }
 
     public CreateGameResult createGame(String gameName, String authToken) throws DataAccessException, BadRequestException {
@@ -31,7 +30,7 @@ public class GameService {
 
     public void joinGame(JoinGameRequest joinReq, String authToken) throws DataAccessException, BadRequestException, AlreadyTakenException {
         String username = AccessAuthData.getAuth(authToken).username();
-        if (AccessGameData.getGame(joinReq.gameID()).gameName() == null){
+        if (AccessGameData.getGame(joinReq.gameID()) == null){
             throw new BadRequestException("bad request");
         }
         if (joinReq.playerColor() == ChessGame.TeamColor.WHITE){

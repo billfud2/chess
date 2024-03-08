@@ -1,21 +1,19 @@
 package dataAccessTests;
 
 import chess.ChessGame;
-import dataAccess.AccessGameData;
-import dataAccess.BadRequestException;
-import dataAccess.DataAccessException;
-import dataAccess.DatabaseManager;
+import dataAccess.*;
 import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
+import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class AccessGameDataTest {
     UserData uData = new UserData("username","pass","email");
-    GameData gData = new GameData(1, "white", "black", "gam", new ChessGame());
+    GameData gData = new GameData(0, "white", "black", "gam", new ChessGame());
     private static Connection conn;
     static {
         try {
@@ -63,7 +61,24 @@ class AccessGameDataTest {
     }
 
     @Test
-    void listGames() {
+    void listGames() throws Exception {
+        AccessGameData.clear();
+        String auth = AccessAuthData.createAuth(uData.username()).authToken();
+        int gameID = AccessGameData.createGame(gData.gameName());
+        Collection<GameData> games = AccessGameData.listGames(auth);
+        assert games.size() == 1;
+    }
+    @Test
+    void badListGames() throws Exception {
+        try {
+            AccessGameData.clear();
+            String auth = AccessAuthData.createAuth(uData.username()).authToken();
+            int gameID = AccessGameData.createGame(gData.gameName());
+            Collection<GameData> games = AccessGameData.listGames("auth");
+            assert false;
+        }catch(DataAccessException e){
+            assert true;
+        }
     }
 
     @Test
@@ -80,10 +95,40 @@ class AccessGameDataTest {
     }
 
     @Test
-    void addBlackPlayer() {
+    void addBlackPlayer() throws Exception {
+        AccessGameData.clear();
+        int gameID = AccessGameData.createGame(gData.gameName());
+        AccessGameData.addBlackPlayer(gData.blackUsername(), gameID);
+        assert AccessGameData.getGame(gameID).blackUsername().equals(gData.blackUsername());
+    }
+    @Test
+    void badAddBlackPlayer() throws Exception {
+        try {
+            AccessGameData.clear();
+            int gameID = AccessGameData.createGame(gData.gameName());
+            AccessGameData.addBlackPlayer(null, 0);
+            assert false;
+        }catch (BadRequestException e){
+            assert true;
+        }
     }
 
     @Test
-    void addWhitePlayer() {
+    void addWhitePlayer() throws Exception {
+        AccessGameData.clear();
+        int gameID = AccessGameData.createGame(gData.gameName());
+        AccessGameData.addWhitePlayer(gData.whiteUsername(), gameID);
+        assert AccessGameData.getGame(gameID).whiteUsername().equals(gData.whiteUsername());
+    }
+    @Test
+    void badAddWhitePlayer() throws Exception {
+        try {
+            AccessGameData.clear();
+            int gameID = AccessGameData.createGame(gData.gameName());
+            AccessGameData.addWhitePlayer(null, 0);
+            assert false;
+        }catch (BadRequestException e){
+            assert true;
+        }
     }
 }

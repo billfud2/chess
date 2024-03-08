@@ -55,8 +55,10 @@ public class AccessGameData {
 
     }
 
-    static public Collection<GameData> listGames() throws DataAccessException {
-        Collection<GameData> games = null;
+    static public Collection<GameData> listGames(String auth) throws DataAccessException {
+        AccessAuthData.getAuth(auth);
+        Collection<GameData> games = new HashSet<>() {
+        };
         try (var preparedStatement = conn.prepareStatement("SELECT * FROM game")) {
             try (var rs = preparedStatement.executeQuery()) {
                 while (rs.next()) {
@@ -84,9 +86,9 @@ public class AccessGameData {
         }
     }
 
-    static public void addBlackPlayer(String username, int gameID) throws AlreadyTakenException, DataAccessException {
-        if(getGame(gameID).blackUsername() != null){
-            throw new AlreadyTakenException("already taken");
+    static public void addBlackPlayer(String username, int gameID) throws AlreadyTakenException, DataAccessException, BadRequestException {
+        if(getGame(gameID) == null){
+            throw new BadRequestException("bad request");
         }
         try (var preparedStatement = conn.prepareStatement("UPDATE game SET blackUsername=? WHERE gameID=?")) {
             preparedStatement.setString(1, username);
@@ -97,8 +99,8 @@ public class AccessGameData {
         }
     }
     public static void addWhitePlayer(String username, int gameID) throws AlreadyTakenException, BadRequestException, DataAccessException {
-        if(getGame(gameID).whiteUsername() != null){
-            throw new AlreadyTakenException("already taken");
+        if(getGame(gameID) == null){
+            throw new BadRequestException("bad request");
         }
         try (var preparedStatement = conn.prepareStatement("UPDATE game SET whiteUsername=? WHERE gameID=?")) {
             preparedStatement.setString(1, username);
