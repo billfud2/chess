@@ -1,16 +1,19 @@
 package clientTests;
 
+import chess.ChessGame;
 import dataAccess.AccessAuthData;
 import dataAccess.AccessGameData;
 import dataAccess.AccessUserData;
 import dataAccess.DataAccessException;
 import model.UserData;
 import org.junit.jupiter.api.*;
+import recordsForReqAndRes.JoinGameRequest;
 import server.Server;
 import facade.ServerFacade;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Collection;
 import java.util.Objects;
 
 
@@ -156,8 +159,7 @@ public class ServerFacadeTests {
             facade.register(new UserData(username, password, email));
             facade.login(new UserData(username, password, null));
             int id = facade.createGame(gameName);
-
-
+            assert !facade.listGames().games().isEmpty();
         }catch(IOException e){
             System.out.println(e.getMessage());
             assert false;
@@ -171,9 +173,47 @@ public class ServerFacadeTests {
         AccessGameData.clear();
         try {
             facade.register(new UserData(username, password, email));
+            facade.login(new UserData(username, password, null));
             int id = facade.createGame(gameName);
+            facade.logout();
+            facade.listGames().games();
             assert false;
-        } catch (IOException e) {
+        }catch(IOException e){
+            System.out.println(e.getMessage());
+            assert true;
+        }
+    }
+    @Test
+    public void testJoinGame() throws Exception {
+        AccessUserData.clear();
+        AccessAuthData.clear();
+        AccessGameData.clear();
+        try {
+            facade.register(new UserData(username, password, email));
+            facade.login(new UserData(username, password, null));
+            int id = facade.createGame(gameName);
+            facade.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE, id));
+            String tempUsername = facade.listGames().games().get(0).whiteUsername();
+            assert tempUsername.equals(username);
+        }catch(IOException e){
+            System.out.println(e.getMessage());
+            assert false;
+        }
+
+    }
+    @Test
+    public void badJoinGame() throws Exception {
+        AccessUserData.clear();
+        AccessAuthData.clear();
+        AccessGameData.clear();
+        try {
+            facade.register(new UserData(username, password, email));
+            facade.login(new UserData(username, password, null));
+            int id = facade.createGame(gameName);
+            facade.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE, id));
+            facade.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE, id));
+            assert false;
+        }catch(IOException e){
             System.out.println(e.getMessage());
             assert true;
         }
