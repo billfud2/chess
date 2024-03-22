@@ -1,5 +1,10 @@
+package facade;
+
 import com.google.gson.Gson;
 import model.UserData;
+import recordsForReqAndRes.CreateGameResult;
+import recordsForReqAndRes.JoinGameRequest;
+import recordsForReqAndRes.ListGamesResult;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,9 +14,22 @@ import java.net.URL;
 
 
 public class ServerFacade {
-    static String websiteURL = "http://localhost:8080";
+    static ServerFacade instance;
+    static String websiteURL;
     static Gson gson = new Gson();
-    static String authLog;
+    public static String authLog;
+
+
+    public ServerFacade() {
+    }
+    public static ServerFacade getInstance(String URL, int port){
+        if (instance == null) {
+            instance = new ServerFacade();
+            websiteURL = "http://" + URL + ":" + Integer.toString(port);
+        }
+        return instance;
+    }
+
     public static void register(UserData user) throws IOException {
         URL url = new URL(websiteURL + "/user");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -22,7 +40,6 @@ public class ServerFacade {
         connection.connect();
         try(OutputStream reqBody = connection.getOutputStream();){
             reqBody.write(gson.toJson(user).getBytes("UTF-8"));
-            reqBody.close();
         }
         if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
 
