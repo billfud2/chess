@@ -43,10 +43,10 @@ public class PreloginUI {
                 break;
             }
             else if (words[0].equals("help")){
-                System.out.println("Type:'register <USERNAME> <PASSWORD> <EMAIL>' - to create an account \nType: 'login <USERNAME> <PASSWORD>' - to login for the best chess game\nType: 'quit' - to stop playing chess\nType: 'help' - to get find out what you can do");
+                System.out.println("Type:'register <USERNAME> <PASSWORD> <EMAIL>' - to create an account \nType: 'login <USERNAME> <PASSWORD>' - to login for the best chess game\nType: 'quit' - to stop playing chess\nType: 'help' - to find out what you can do");
             }
             else{
-                System.out.println("INVALID COMMAND: try typing 'help'");
+                System.out.println("INVALID COMMAND: try typing 'help' for valid commands");
             }
         }
         server.stop();
