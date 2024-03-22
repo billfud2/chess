@@ -85,7 +85,6 @@ public class ServerFacade {
         connection.setReadTimeout(5000);
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Authorization", authLog);
-        connection.setRequestProperty("Content-Type", "json");
         connection.setDoOutput(true);
         connection.connect();
         if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
@@ -101,14 +100,50 @@ public class ServerFacade {
             throw new IOException(Error);
         }
     }
-    public static void createGame(){
+    public static int createGame(String gameName)throws IOException{
+        URL url = new URL(websiteURL + "/game");
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setReadTimeout(5000);
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Authorization", authLog);
+        connection.setRequestProperty("Content-Type", "json");
+        connection.setDoOutput(true);
+        connection.connect();
+        try(OutputStream reqBody = connection.getOutputStream();){
+            reqBody.write(gson.toJson(gameName).getBytes("UTF-8"));
+            reqBody.close();
+        }
+        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
 
+            InputStream resBody = connection.getInputStream();
+            CreateGameResult result = (CreateGameResult) gson.fromJson((new String(resBody.readAllBytes(), "UTF-8")), CreateGameResult.class);
+            return result.gameID();
+        }
+        else {
+            InputStream resBody = connection.getErrorStream();
+            // Read and process error response body from InputStream ...
+            String Error = new String(resBody.readAllBytes(), "UTF-8");
+            throw new IOException(Error);
+        }
     }
-    public static void joinGame(){
-
+    public static void joinGame(JoinGameRequest join) throws IOException{
+        URL url = new URL(websiteURL + "/game");
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setReadTimeout(5000);
+        connection.setRequestMethod("PUT");
+        connection.setRequestProperty("Authorization", authLog);
+        connection.setRequestProperty("Content-Type", "json");
+        connection.setDoOutput(true);
+        connection.connect();
+        try(OutputStream reqBody = connection.getOutputStream();){
+            reqBody.write(gson.toJson(join).getBytes("UTF-8"));
+            reqBody.close();
+        }
+        if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+            InputStream resBody = connection.getErrorStream();
+            // Read and process error response body from InputStream ...
+            String Error = new String(resBody.readAllBytes(), "UTF-8");
+            throw new IOException(Error);
+        }
     }
-    public static void joinObserver(){
-
-    }
-
 }
