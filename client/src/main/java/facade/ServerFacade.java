@@ -3,6 +3,7 @@ package facade;
 import com.google.gson.Gson;
 import model.AuthData;
 import model.UserData;
+import recordsForReqAndRes.CreateGameRequest;
 import recordsForReqAndRes.CreateGameResult;
 import recordsForReqAndRes.JoinGameRequest;
 import recordsForReqAndRes.ListGamesResult;
@@ -125,14 +126,19 @@ public class ServerFacade {
         connection.setDoOutput(true);
         connection.connect();
         try(OutputStream reqBody = connection.getOutputStream();){
-            reqBody.write(gson.toJson(gameName).getBytes("UTF-8"));
+            reqBody.write(gson.toJson(new CreateGameRequest(gameName)).getBytes("UTF-8"));
             reqBody.close();
         }
         if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
 
-            InputStream resBody = connection.getInputStream();
-            CreateGameResult result = (CreateGameResult) gson.fromJson((new String(resBody.readAllBytes(), "UTF-8")), CreateGameResult.class);
-            return result.gameID();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+            return ((CreateGameResult) gson.fromJson(response.toString(), CreateGameResult.class)).gameID();
         }
         else {
             InputStream resBody = connection.getErrorStream();
