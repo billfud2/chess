@@ -1,6 +1,9 @@
 package clientTests;
 
+import dataAccess.AccessAuthData;
+import dataAccess.AccessGameData;
 import dataAccess.AccessUserData;
+import dataAccess.DataAccessException;
 import model.UserData;
 import org.junit.jupiter.api.*;
 import server.Server;
@@ -16,6 +19,7 @@ public class ServerFacadeTests {
     private String username = "billfud";
     private String password = "monkeyman";
     private String email = "billfud2@gmail.com";
+    private String gameName = "Best Game";
     private static int desPort = 8080;
 
     private static Server server;
@@ -81,5 +85,97 @@ public class ServerFacadeTests {
             assert true;
         }
 
+    }
+    @Test
+    public void testLogout() throws Exception {
+        AccessUserData.clear();
+        AccessAuthData.clear();
+        try {
+            facade.register(new UserData(username, password, email));
+            facade.login(new UserData(username, password, null));
+            facade.logout();
+            AccessAuthData.getAuth(facade.authLog);
+            assert false;
+        }catch(DataAccessException e){
+            System.out.println(e.getMessage());
+            assert true;
+        }
+
+    }
+    @Test
+    public void badTestLogout() throws Exception {
+        AccessUserData.clear();
+        AccessAuthData.clear();
+        try {
+            facade.register(new UserData(username, password, email));
+            facade.login(new UserData(username, password, null));
+            facade.logout();
+            facade.logout();
+            assert false;
+        }catch(IOException e){
+            System.out.println(e.getMessage());
+            assert true;
+        }
+    }
+    @Test
+    public void testCreateGame() throws Exception {
+        AccessUserData.clear();
+        AccessAuthData.clear();
+        AccessGameData.clear();
+        try {
+            facade.register(new UserData(username, password, email));
+            facade.login(new UserData(username, password, null));
+            int id = facade.createGame(gameName);
+            assert id == 1;
+        }catch(IOException e){
+            System.out.println(e.getMessage());
+            assert false;
+        }
+
+    }
+    @Test
+    public void badCreateGame() throws Exception {
+        AccessUserData.clear();
+        AccessAuthData.clear();
+        AccessGameData.clear();
+        try {
+            facade.register(new UserData(username, password, email));
+            int id = facade.createGame(gameName);
+            assert false;
+        }catch(IOException e){
+            System.out.println(e.getMessage());
+            assert true;
+        }
+    }
+    @Test
+    public void testListGames() throws Exception {
+        AccessUserData.clear();
+        AccessAuthData.clear();
+        AccessGameData.clear();
+        try {
+            facade.register(new UserData(username, password, email));
+            facade.login(new UserData(username, password, null));
+            int id = facade.createGame(gameName);
+
+
+        }catch(IOException e){
+            System.out.println(e.getMessage());
+            assert false;
+        }
+
+    }
+    @Test
+    public void badListGames() throws Exception {
+        AccessUserData.clear();
+        AccessAuthData.clear();
+        AccessGameData.clear();
+        try {
+            facade.register(new UserData(username, password, email));
+            int id = facade.createGame(gameName);
+            assert false;
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            assert true;
+        }
     }
 }
