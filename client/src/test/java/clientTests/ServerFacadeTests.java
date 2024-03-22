@@ -52,6 +52,7 @@ public class ServerFacadeTests {
             facade.register(new UserData(username, null, email));
             assert false;
         }catch(IOException e){
+            System.out.println(e.getMessage());
             assert true;
         }
 
@@ -61,8 +62,10 @@ public class ServerFacadeTests {
         AccessUserData.clear();
         try {
             facade.register(new UserData(username, password, email));
-            assert AccessUserData.getUser(username).email().equals(email);
+            facade.login(new UserData(username, password, null));
+            assert facade.authLog != null;
         }catch(IOException e){
+            System.out.println(e.getMessage());
             assert false;
         }
 
@@ -71,7 +74,8 @@ public class ServerFacadeTests {
     public void badTestLogin() throws Exception {
         AccessUserData.clear();
         try {
-            facade.register(new UserData(username, null, email));
+            facade.register(new UserData(username, password, email));
+            facade.register(new UserData(username, "hi",null));
             assert false;
         }catch(IOException e){
             assert true;

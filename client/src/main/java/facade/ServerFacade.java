@@ -1,14 +1,13 @@
 package facade;
 
 import com.google.gson.Gson;
+import model.AuthData;
 import model.UserData;
 import recordsForReqAndRes.CreateGameResult;
 import recordsForReqAndRes.JoinGameRequest;
 import recordsForReqAndRes.ListGamesResult;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -41,13 +40,7 @@ public class ServerFacade {
         try(OutputStream reqBody = connection.getOutputStream();){
             reqBody.write(gson.toJson(user).getBytes("UTF-8"));
         }
-        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-
-            InputStream resBody = connection.getInputStream();
-
-            String auth = new String(resBody.readAllBytes(), "UTF-8");
-        }
-        else {
+        if (connection.getResponseCode() != HttpURLConnection.HTTP_OK)  {
             InputStream resBody = connection.getErrorStream();
             // Read and process error response body from InputStream ...
             String Error = new String(resBody.readAllBytes(), "UTF-8");
@@ -68,10 +61,15 @@ public class ServerFacade {
             reqBody.close();
         }
         if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
 
-            InputStream resBody = connection.getInputStream();
-
-            String authLog = new String(resBody.readAllBytes(), "UTF-8");
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+            authLog = ((AuthData) gson.fromJson(response.toString(), AuthData.class)).authToken();
         }
         else {
             InputStream resBody = connection.getErrorStream();
