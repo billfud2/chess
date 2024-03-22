@@ -60,7 +60,7 @@ public class UserHandler {
     }
     public String handleLogout(Request req, Response res ) throws DataAccessException {
         try {
-            String request = req.headers("authorization");
+             String request = req.headers("authorization");
             serve.logout(request);
             return gson.toJson(null);
         }catch (DataAccessException e){
