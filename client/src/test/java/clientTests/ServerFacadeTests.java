@@ -23,15 +23,15 @@ public class ServerFacadeTests {
     private String password = "monkeyman";
     private String email = "billfud2@gmail.com";
     private String gameName = "Best Game";
-    private static int desPort = 8080;
 
     private static Server server;
-    private static ServerFacade facade = ServerFacade.getInstance("localhost", desPort);
+    private static ServerFacade facade;
 
     @BeforeAll
     public static void init() {
         server = new Server();
-        var port = server.run(desPort);
+        var port = server.run(0);
+        facade = ServerFacade.getInstance("localhost", port);
         System.out.println("Started test HTTP server on " + port);
     }
 
