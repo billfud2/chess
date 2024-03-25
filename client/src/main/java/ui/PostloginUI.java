@@ -14,15 +14,28 @@ public class PostloginUI {
     private ArrayList<GameData> games;
     public boolean run(Server server, ServerFacade facade, String username){
         System.out.printf("You logged in as " + username + "!\nWelcome " + username);
+        try {games = facade.listGames().games();
+        } catch(Exception e){
+            System.out.println(e.getMessage() + "\nSorry something went wrong");
+        }
         while (true) {
             System.out.printf("\n[LOGGED_IN]>>> ");
             Scanner scanner = new Scanner(System.in);
             String line = scanner.nextLine();
             String[] words = line.split(" ");
-            if (words[0].equals("create")){
+            if (words[0].equals("create") && words.length >= 2){
+                String name = "";
+                int k = 0;
+                for(String word : words) {
+                    if (k == 0) {
+                        k++;
+                    } else {
+                        name = name + word;
+                    }
+                }
                 try {
-                    facade.createGame(words[1]);
-                }catch(IOException e){
+                    facade.createGame(name);
+                }catch(Exception e){
                     System.out.println(e.getMessage() + "\nSorry something went wrong");
                 }
             }
@@ -34,11 +47,11 @@ public class PostloginUI {
                         System.out.println("\n" + i +  ". " + game);
                         i++;
                     }
-                }catch(IOException e){
+                }catch(Exception e){
                     System.out.println(e.getMessage() + "\nSorry Something went wrong");
                 }
             }
-            else if(words[0].equals("join")){
+            else if(words[0].equals("join")&& words.length == 3){
                 try {
                     int id = Integer.parseInt(words[1]);
                     if(id > 0 && id <= games.size()) {
@@ -53,12 +66,13 @@ public class PostloginUI {
                     else{
                         System.out.println("not a valid game id try again");
                     }
-                }catch(IOException e){
+                }catch(Exception e){
                     System.out.println(e.getMessage() + "\nSorry Something went wrong");
                 }
             }
-            else if(words[0].equals("observe")){
+            else if(words[0].equals("observe")&& words.length == 2){
                 try {
+
                     int id = Integer.parseInt(words[1]);
                     if(id > 0 && id <= games.size()) {
                         facade.joinGame(new JoinGameRequest(null, games.get(id).gameID()));
@@ -66,7 +80,7 @@ public class PostloginUI {
                     else{
                         System.out.println("not a valid game id try again");
                     }
-                }catch(IOException e){
+                }catch(Exception e){
                     System.out.println(e.getMessage() + "\nSorry Something went wrong");
                 }
             }

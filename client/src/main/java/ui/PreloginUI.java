@@ -22,19 +22,25 @@ public class PreloginUI {
             Scanner scanner = new Scanner(System.in);
             String line = scanner.nextLine();
             String[] words = line.split(" ");
-            if (words[0].equals("register")){
+            if (words[0].equals("register") && words.length == 4){
                 try {
                     facade.register(new UserData(words[1], words[2], words[3]));
-                }catch(IOException e){
+                    facade.login(new UserData(words[1], words[2], null));
+                    if (new PostloginUI().run(server, facade, words[1])){
+                        break;
+                    }
+                }catch(Exception e){
                     System.out.println(e.getMessage() + "try again");
                 }
             }
-            else if(words[0].equals("login")){
+            else if(words[0].equals("login") && words.length == 3){
                 try {
                     facade.login(new UserData(words[1], words[2], null));
                     //run post login
-                    break;
-                }catch(IOException e){
+                    if (new PostloginUI().run(server, facade, words[1])){
+                        break;
+                    }
+                }catch(Exception e){
                     System.out.println(e.getMessage() + "try again");
                 }
             }
