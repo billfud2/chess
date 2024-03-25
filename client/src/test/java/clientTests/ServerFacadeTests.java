@@ -1,10 +1,7 @@
 package clientTests;
 
 import chess.ChessGame;
-import dataAccess.AccessAuthData;
-import dataAccess.AccessGameData;
-import dataAccess.AccessUserData;
-import dataAccess.DataAccessException;
+import dataAccess.*;
 import model.UserData;
 import org.junit.jupiter.api.*;
 import recordsForReqAndRes.JoinGameRequest;
@@ -28,7 +25,8 @@ public class ServerFacadeTests {
     private static ServerFacade facade;
 
     @BeforeAll
-    public static void init() {
+    public static void init() throws DataAccessException {
+        DatabaseManager.createDatabase();
         server = new Server();
         var port = server.run(0);
         facade = ServerFacade.getInstance("localhost", port);
