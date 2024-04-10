@@ -12,10 +12,6 @@ public class PreloginUI {
     static int desPort = 8080;
     static ServerFacade facade = ServerFacade.getInstance("localhost", desPort);
     public static void main(String[] args) throws IOException {
-        server = new Server();
-        var port = server.run(desPort);
-        System.out.println("Started test HTTP server on " + port + "\n");
-
         System.out.printf("Welcome to the best Chess server. Type help to get started. \n");
         while (true) {
             System.out.printf("\n[LOGGED_OUT]>>> ");
@@ -26,7 +22,7 @@ public class PreloginUI {
                 try {
                     facade.register(new UserData(words[1], words[2], words[3]));
                     facade.login(new UserData(words[1], words[2], null));
-                    if (new PostloginUI().run(server, facade, words[1])){
+                    if (new PostloginUI().run(facade, words[1])){
                         break;
                     }
                 }catch(Exception e){
@@ -37,7 +33,7 @@ public class PreloginUI {
                 try {
                     facade.login(new UserData(words[1], words[2], null));
                     //run post login
-                    if (new PostloginUI().run(server, facade, words[1])){
+                    if (new PostloginUI().run(facade, words[1])){
                         break;
                     }
                 }catch(Exception e){

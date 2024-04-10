@@ -2,17 +2,24 @@ package ui;
 
 import chess.ChessGame;
 import facade.ServerFacade;
+import facade.WSClient;
 import model.GameData;
 import recordsForReqAndRes.JoinGameRequest;
 import server.Server;
+import spark.Spark;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import static chess.ChessGame.TeamColor.BLACK;
+import static chess.ChessGame.TeamColor.WHITE;
+import static ui.PreloginUI.desPort;
+
 public class PostloginUI {
     private ArrayList<GameData> games;
-    public boolean run(Server server, ServerFacade facade, String username){
+    static WSClient ws;
+    public boolean run(ServerFacade facade, String username){
         System.out.printf("You logged in as " + username + "!\nWelcome " + username);
         try {games = facade.listGames().games();
         } catch(Exception e){
@@ -53,12 +60,17 @@ public class PostloginUI {
             }
             else if(words[0].equals("join")&& words.length == 3){
                 try {
-                    int id = Integer.parseInt(words[1]);
-                    if(id > 0 && id <= games.size()) {
+                    int id = Integer.parseInt(words[1]) - 1;
+                    if(id >= 0 && id <= games.size()) {
                         if (words[2].equals("WHITE")) {
-                            facade.joinGame(new JoinGameRequest(ChessGame.TeamColor.WHITE, games.get(id).gameID()));
+                            facade.joinGame(new JoinGameRequest(WHITE, games.get(id).gameID()));
+                            ws = new WSClient("localhost", desPort);
+                            ws.send(J)
+                            new GameplayUI().run(WHITE);
                         } else if (words[2].equals("BLACK")) {
-                            facade.joinGame(new JoinGameRequest(ChessGame.TeamColor.BLACK, games.get(id).gameID()));
+                            facade.joinGame(new JoinGameRequest(BLACK, games.get(id).gameID()));
+                            ws = new WSClient("localhost", desPort);
+                            new GameplayUI().run(BLACK);
                         } else {
                             System.out.println("not a team color");
                         }
