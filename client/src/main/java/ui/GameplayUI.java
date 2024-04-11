@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import facade.WSClient;
 import webSocketMessages.userCommands.*;
 
+import java.util.Collection;
 import java.util.Scanner;
 
 import static chess.ChessGame.TeamColor.BLACK;
@@ -29,9 +30,9 @@ public class GameplayUI {
             String line = scanner.nextLine();
             String[] words = line.split(" ");
             if (words[0].equals("help") && words.length == 1) {
-                System.out.println("Type:'redraw' - to redraw the chessboard \nType: 'leave' - to leave the game\nType: 'move <STARTING COORDINATE> <ENDING COORDINATE> <PROMOTION IF APPLICABLE>' - to move a piece from the starting coordinate to the ending coordinate for example a2 a3\nType: 'resign' - to resign from the game\nType: 'possible <COORDINATES OF PIECE>' - to highlight all the possible moves for the piece in that square\nType: 'help' - to find out what you can do\nType: 'promo' - to see the possible promotion pieces");
+                System.out.println("Type:'redraw' - to redraw the chessboard \nType: 'leave' - to leave the game\nType: 'move <STARTING COORDINATE> <ENDING COORDINATE> <PROMOTION IF APPLICABLE>' - to move a piece from the starting coordinate to the ending coordinate for example a2 a3\nValid Promotions: 'queen','rook','bishop','knight'\nType: 'resign' - to resign from the game\nType: 'possible <COORDINATES OF PIECE>' - to highlight all the possible moves for the piece in that square\nType: 'help' - to find out what you can do");
             } else if (words[0].equals("redraw") && words.length == 1) {
-                printer.printBoard(ws.curBoard, color);
+                printer.printBoard(ws.curGame.getBoard(), color, null);
             } else if (words[0].equals("leave") && words.length == 1) {
                 ws.send(gson.toJson(new Leave(auth, gameID)));
                 return;
@@ -63,16 +64,19 @@ public class GameplayUI {
                 }else{
                     promo = null;
                 }
-                ChessMove move = new ChessMove(stringToMove(words[1]), stringToMove(words[2]), promo);
+                ChessMove move = new ChessMove(stringToPosition(words[1]), stringToPosition(words[2]), promo);
                 ws.send(gson.toJson(new MakeMove(auth, gameID, move)));
+            } else if (words[0].equals("possible") && words.length == 2) {
+                Collection<ChessMove> valid = ws.curGame.validMoves(stringToPosition(words[1]));
+                printer.printBoard(ws.curGame.getBoard(), color, valid);
             }
             }catch(Exception e) {
-
+                System.out.println("Error: " + e.getMessage());
             }
         }
     }
 
-    public ChessPosition stringToMove(String cord) throws Exception {
+    public ChessPosition stringToPosition(String cord) throws Exception {
         char[] chars = cord.toCharArray();
         int row;
         int col;
@@ -94,16 +98,16 @@ public class GameplayUI {
             }else if (chars[0] == 'h') {
                 col = 8;
             }else{
-                throw new Exception("Bad Coordinates");
+                throw new Exception("Bad Coordinate");
             }
             if(chars[1] <= 8 && chars[1] > 0){
                 row = chars[1];
             }else{
-                throw new Exception("Bad Coordinates");
+                throw new Exception("Bad Coordinate");
             }
             return new ChessPosition(row, col);
         }else{
-            throw new Exception("Bad Coordinates");
+            throw new Exception("Bad Coordinate");
         }
     }
 }

@@ -19,7 +19,7 @@ public class WSClient extends Endpoint{
     static Gson gson = new Gson();
     public static String authLog;
     public Session session;
-    public ChessBoard curBoard;
+    public ChessGame curGame;
 
     public WSClient(String URL, int port, ChessGame.TeamColor color) throws Exception {
         websiteURL = "ws://" + URL + ":" + Integer.toString(port);
@@ -32,8 +32,8 @@ public class WSClient extends Endpoint{
                 ServerMessage servMessage = gson.fromJson(message, ServerMessage.class);
                 if (servMessage.getServerMessageType() == ServerMessage.ServerMessageType.LOAD_GAME){
                     LoadGame load = gson.fromJson(message, LoadGame.class);
-                    curBoard = load.game.getBoard();
-                    BoardPrinter.printBoard(curBoard, color);
+                    curGame = load.game;
+                    BoardPrinter.printBoard(curGame.getBoard(), color, null);
                 } else if (servMessage.getServerMessageType() == ServerMessage.ServerMessageType.NOTIFICATION) {
                     Notification note = gson.fromJson(message, Notification.class);
                     System.out.println(note.message);
