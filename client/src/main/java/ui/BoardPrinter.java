@@ -36,6 +36,8 @@ public class BoardPrinter {
 
 
     public static void printBoard(ChessBoard board, ChessGame.TeamColor color, Collection<ChessMove> valid) {
+        ends = new HashSet<>();
+        start = null;
         if (valid != null){
             createValid(valid);
         }
@@ -52,7 +54,8 @@ public class BoardPrinter {
             b2DrawChessBoard(out);
             drawBoarderRow(out, b2Headers);
         }
-
+        out.print("\u001B[49m");
+        out.print("\u001B[0m");
     }
 //    private static void drawDivider(PrintStream out){
 //        for (int boardCol = 0; boardCol < BOARD_SIZE_IN_SQUARES + 2; ++boardCol) {
@@ -128,7 +131,7 @@ public class BoardPrinter {
                 String background = SET_BG_COLOR_WHITE;
                 if(!ends.isEmpty() && ends.contains(pos)){
                     background = SET_BG_COLOR_GREEN;
-                } else if (start.equals(pos)) {
+                } else if (start != null && start.equals(pos)) {
                     background = SET_BG_COLOR_YELLOW;
                 }
                 drawSquare(out, piece.s(),background , piece.color());
@@ -137,7 +140,7 @@ public class BoardPrinter {
                 String background = SET_BG_COLOR_BLACK;
                 if(!ends.isEmpty() && ends.contains(pos)){
                     background = SET_BG_COLOR_DARK_GREEN;
-                } else if (start.equals(pos)) {
+                } else if (start != null && start.equals(pos)) {
                     background = SET_BG_COLOR_YELLOW;
                 }
                 drawSquare(out, piece.s(),background , piece.color());
@@ -192,7 +195,6 @@ public class BoardPrinter {
         return player;
     }
     private static void createValid(Collection<ChessMove> valid){
-        ends = new HashSet<>();
         Boolean has = false;
         for( ChessMove move : valid){
             if(!has){

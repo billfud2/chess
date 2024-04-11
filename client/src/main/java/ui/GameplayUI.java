@@ -39,8 +39,8 @@ public class GameplayUI {
             } else if (words[0].equals("resign") && words.length == 1) {
                 System.out.printf("\nAre you sure you want to resign? [type 'yes' to confirm anything else will cancel]");
                 Scanner scan = new Scanner(System.in);
-                String word = scanner.nextLine();
-                String[] ans = line.split(" ");
+                String word = scan.nextLine();
+                String[] ans = word.split(" ");
                 if(ans[0].equals("yes")){
                     ws.send(gson.toJson(new Resign(auth, gameID)));
                 }else{
@@ -69,6 +69,8 @@ public class GameplayUI {
             } else if (words[0].equals("possible") && words.length == 2) {
                 Collection<ChessMove> valid = ws.curGame.validMoves(stringToPosition(words[1]));
                 printer.printBoard(ws.curGame.getBoard(), color, valid);
+            }else{
+                System.out.println("invalid command try 'help'");
             }
             }catch(Exception e) {
                 System.out.println("Error: " + e.getMessage());
@@ -100,12 +102,13 @@ public class GameplayUI {
             }else{
                 throw new Exception("Bad Coordinate");
             }
-            if(chars[1] <= 8 && chars[1] > 0){
-                row = chars[1];
+            row = Character.getNumericValue(chars[1]);
+            if(row <= 8 && row > 0) {
+                return new ChessPosition(row, col);
             }else{
                 throw new Exception("Bad Coordinate");
             }
-            return new ChessPosition(row, col);
+
         }else{
             throw new Exception("Bad Coordinate");
         }
