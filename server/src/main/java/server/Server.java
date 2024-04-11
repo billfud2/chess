@@ -69,6 +69,7 @@ public class Server {
                 String name = AccessAuthData.getAuth(lev.getAuthString()).username();
                 AccessGameData.removePlayer(lev.gameID, name);
                 sendOther(name + " left", session);
+                session.close();
             } else if (command.getCommandType() == UserGameCommand.CommandType.RESIGN) {
                 Resign res = gson.fromJson(message, Resign.class);
                 ChessGame game = AccessGameData.getGame(res.gameID).game();

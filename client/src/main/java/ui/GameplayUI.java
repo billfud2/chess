@@ -35,8 +35,17 @@ public class GameplayUI {
                     printer.printBoard(ws.curBoard, color);
                 } else if (words[0].equals("leave") && words.length == 1) {
                     ws.send(gson.toJson(new Leave(auth, gameID)));
-                } else if () {
-                    
+                    return;
+                } else if (words[0].equals("resign") && words.length == 1) {
+                    System.out.printf("\nAre you sure you want to resign? [type 'yes' to confirm anything else will cancel]");
+                    Scanner scan = new Scanner(System.in);
+                    String word = scanner.nextLine();
+                    String[] ans = line.split(" ");
+                    if(ans[0].equals("yes")){
+                        ws.send(gson.toJson(new Resign(auth, gameID)));
+                    }else{
+                        System.out.println("never give up!! that's the attitude");
+                    }
                 }
             }
         }catch(Exception e){
