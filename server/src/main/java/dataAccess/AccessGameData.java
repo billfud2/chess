@@ -90,9 +90,10 @@ public class AccessGameData {
         }
     }
     static public void updateGame(int gameID, String gameString) throws DataAccessException {
-        try (var preparedStatement = conn.prepareStatement("UPDATE game SET game = " + gameString +" WHERE gameID=?")) {
-            preparedStatement.setInt(1, gameID);
-            preparedStatement.executeQuery();
+        try (var preparedStatement = conn.prepareStatement("UPDATE game SET game = ? WHERE gameID=?")) {
+            preparedStatement.setString(1, gameString);
+            preparedStatement.setInt(2, gameID);
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage());
         }
@@ -107,9 +108,10 @@ public class AccessGameData {
         }else{
             return;
         }
-        try (var preparedStatement = conn.prepareStatement("DELETE FROM game WHERE " + colString + "=?")) {
-            preparedStatement.setString(1, username);
-            preparedStatement.executeQuery();
+        try (var preparedStatement = conn.prepareStatement("DELETE FROM game WHERE ? = ?")) {
+            preparedStatement.setString(1, colString);
+            preparedStatement.setString(2, username);
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage());
         }

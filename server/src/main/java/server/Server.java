@@ -51,19 +51,19 @@ public class Server {
                 JoinPlayer join = gson.fromJson(message, JoinPlayer.class);
                 sessions.add(session);
                 session.getRemote().sendString(gson.toJson(new LoadGame(AccessGameData.getGame(join.gameID).game())));
-                sendOther(gson.toJson(new Notification(AccessAuthData.getAuth(join.getAuthString()).username() + " joined as " + join.color)), session);
+                sendOther(AccessAuthData.getAuth(join.getAuthString()).username() + " joined as " + join.color, session);
             } else if (command.getCommandType() == UserGameCommand.CommandType.JOIN_OBSERVER) {
                 JoinObserver obser = gson.fromJson(message, JoinObserver.class);
                 sessions.add(session);
                 session.getRemote().sendString(gson.toJson(new LoadGame(AccessGameData.getGame(obser.gameID).game())));
-                sendOther(gson.toJson(new Notification(AccessAuthData.getAuth(obser.getAuthString()).username() + " joined as an observer")), session);
+                sendOther(AccessAuthData.getAuth(obser.getAuthString()).username() + " joined as an observer", session);
             } else if (command.getCommandType() == UserGameCommand.CommandType.MAKE_MOVE) {
                 MakeMove make = gson.fromJson(message, MakeMove.class);
                 ChessGame game = AccessGameData.getGame(make.gameID).game();
                 game.makeMove(make.move);
                 AccessGameData.updateGame(make.gameID, gson.toJson(game));
-                sendOther(gson.toJson(new LoadGame(game)), null);
-                sendOther(gson.toJson(new Notification("Piece moved from " + make.move.getStartPosition().toString() + "to " + make.move.getEndPosition().toString())), session);
+                sendGameAll(game);
+                sendOther("Piece moved from " + make.move.getStartPosition().toString() + "to " + make.move.getEndPosition().toString(), session);
             } else if (command.getCommandType() == UserGameCommand.CommandType.LEAVE) {
                 Leave lev = gson.fromJson(message, Leave.class);
                 String name = AccessAuthData.getAuth(lev.getAuthString()).username();
@@ -87,9 +87,14 @@ public class Server {
     }
     private void sendOther(String message, Session root) throws IOException {
         for (Session session : sessions) {
-            if (!session.equals(root)){
+            if ((root == null) || (!session.equals(root))){
             session.getRemote().sendString(gson.toJson(new Notification(message)));
             }
+        }
+    }
+    private void sendGameAll(ChessGame game) throws IOException {
+        for (Session session : sessions) {
+            session.getRemote().sendString(gson.toJson(new LoadGame(game)));
         }
     }
 

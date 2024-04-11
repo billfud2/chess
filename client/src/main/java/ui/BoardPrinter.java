@@ -43,7 +43,8 @@ public class BoardPrinter {
         }
         curBoard = board;
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-        out.print(ERASE_SCREEN);
+        out.print("\033[H\033[2J");
+        out.flush();
         out.print("\n");
         if(color == ChessGame.TeamColor.BLACK){
             drawBoarderRow(out, b1Headers);
