@@ -33,35 +33,33 @@ public class BoardPrinter {
     private static ChessBoard curBoard;
 
 
-    public static void main(String[] args) {
-        ChessBoard ba = new ChessBoard();
-        ba.resetBoard();
-        printBoard(ba);
-    }
-    public static void printBoard(ChessBoard board) {
+    public static void printBoard(ChessBoard board, ChessGame.TeamColor color) {
         curBoard = board;
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(ERASE_SCREEN);
         out.print("\n");
-        drawBoarderRow(out, b1Headers);
-        b1DrawChessBoard(out);
-        drawBoarderRow(out, b1Headers);
-        drawDivider(out);
-        drawBoarderRow(out, b2Headers);
-        b2DrawChessBoard(out);
-        drawBoarderRow(out, b2Headers);
-    }
-    private static void drawDivider(PrintStream out){
-        for (int boardCol = 0; boardCol < BOARD_SIZE_IN_SQUARES + 2; ++boardCol) {
-            out.print(SET_BG_COLOR_BLACK);
-            out.print(SET_TEXT_COLOR_BLACK);
-            out.print(EMPTY);
-            out.print(" ");
-            out.print(EMPTY);
+        if(color == ChessGame.TeamColor.BLACK){
+            drawBoarderRow(out, b1Headers);
+            b1DrawChessBoard(out);
+            drawBoarderRow(out, b1Headers);
+        }else {
+            drawBoarderRow(out, b2Headers);
+            b2DrawChessBoard(out);
+            drawBoarderRow(out, b2Headers);
         }
-        out.print(SET_BG_COLOR_DARK_GREY);
-        out.println();
+
     }
+//    private static void drawDivider(PrintStream out){
+//        for (int boardCol = 0; boardCol < BOARD_SIZE_IN_SQUARES + 2; ++boardCol) {
+//            out.print(SET_BG_COLOR_BLACK);
+//            out.print(SET_TEXT_COLOR_BLACK);
+//            out.print(EMPTY);
+//            out.print(" ");
+//            out.print(EMPTY);
+//        }
+//        out.print(SET_BG_COLOR_DARK_GREY);
+//        out.println();
+//    }
 
     private static void drawBoarderRow(PrintStream out, String[] headers) {
         drawHeader(out, " ");

@@ -1,4 +1,6 @@
 package facade;
+import chess.ChessBoard;
+import chess.ChessGame;
 import com.google.gson.Gson;
 import ui.BoardPrinter;
 import webSocketMessages.serverMessages.LoadGame;
@@ -17,8 +19,9 @@ public class WSClient extends Endpoint{
     static Gson gson = new Gson();
     public static String authLog;
     public Session session;
+    public ChessBoard curBoard;
 
-    public WSClient(String URL, int port) throws Exception {
+    public WSClient(String URL, int port, ChessGame.TeamColor color) throws Exception {
         websiteURL = "ws://" + URL + ":" + Integer.toString(port);
         URI uri = new URI(websiteURL + "/connect");
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
@@ -29,7 +32,8 @@ public class WSClient extends Endpoint{
                 ServerMessage servMessage = gson.fromJson(message, ServerMessage.class);
                 if (servMessage.getServerMessageType() == ServerMessage.ServerMessageType.LOAD_GAME){
                     LoadGame load = gson.fromJson(message, LoadGame.class);
-                    BoardPrinter.printBoard(load.game.getBoard());
+                    curBoard = load.game.getBoard();
+                    BoardPrinter.printBoard(curBoard, color);
                 } else if (servMessage.getServerMessageType() == ServerMessage.ServerMessageType.NOTIFICATION) {
                     Notification note = gson.fromJson(message, Notification.class);
                     System.out.println(note.message);

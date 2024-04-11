@@ -69,14 +69,14 @@ public class PostloginUI {
                     if(id >= 0 && id <= games.size()) {
                         if (words[2].equals("WHITE")) {
                             facade.joinGame(new JoinGameRequest(WHITE, games.get(id).gameID()));
-                            ws = new WSClient("localhost", desPort);
+                            ws = new WSClient("localhost", desPort, WHITE);
                             ws.send(gson.toJson(new JoinPlayer(facade.authLog, games.get(id).gameID(), WHITE)));
-                            new GameplayUI().run(WHITE);
+                            new GameplayUI().run(WHITE, ws, games.get(id).gameID(), facade.authLog);
                         } else if (words[2].equals("BLACK")) {
                             facade.joinGame(new JoinGameRequest(BLACK, games.get(id).gameID()));
-                            ws = new WSClient("localhost", desPort);
+                            ws = new WSClient("localhost", desPort, BLACK);
                             ws.send(gson.toJson(new JoinPlayer(facade.authLog, games.get(id).gameID(), BLACK)));
-                            new GameplayUI().run(BLACK);
+                            new GameplayUI().run(BLACK, ws, games.get(id).gameID(), facade.authLog);
                         } else {
                             System.out.println("not a team color");
                         }
@@ -94,9 +94,9 @@ public class PostloginUI {
                     int id = Integer.parseInt(words[1]) - 1;
                     if(id >= 0 && id <= games.size()) {
                         facade.joinGame(new JoinGameRequest(null, games.get(id).gameID()));
-                        ws = new WSClient("localhost", desPort);
+                        ws = new WSClient("localhost", desPort, null);
                         ws.send(gson.toJson(new JoinObserver(facade.authLog, games.get(id).gameID())));
-                        new GameplayUI().run(null);
+                        new GameplayUI().run(null, ws, games.get(id).gameID(), facade.authLog);
                     }
                     else{
                         System.out.println("not a valid game id try again");
