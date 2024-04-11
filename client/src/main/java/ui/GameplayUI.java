@@ -17,26 +17,32 @@ public class GameplayUI {
     
 
     public void run(ChessGame.TeamColor color, WSClient ws, int gameID, String auth) {
+        if (color == null) {
+            System.out.println("\n[OBSERVING]");
+        } else if (color == WHITE) {
+            System.out.println("\n[PLAYING_AS_WHITE]");
+        } else {
+            System.out.println("\n[PLAYING_AS_BLACK]");
+        }
         while (true) {
             try {
-            if (color == null) {
-                System.out.printf("\n[OBSERVING]>>> ");
-            } else if (color == WHITE) {
-                System.out.printf("\n[PLAYING_AS_WHITE]>>> ");
-            } else {
-                System.out.printf("\n[PLAYING_AS_BLACK]>>> ");
-            }
             Scanner scanner = new Scanner(System.in);
             String line = scanner.nextLine();
             String[] words = line.split(" ");
             if (words[0].equals("help") && words.length == 1) {
-                System.out.println("Type:'redraw' - to redraw the chessboard \nType: 'leave' - to leave the game\nType: 'move <STARTING COORDINATE> <ENDING COORDINATE> <PROMOTION IF APPLICABLE>' - to move a piece from the starting coordinate to the ending coordinate for example a2 a3\nValid Promotions: 'queen','rook','bishop','knight'\nType: 'resign' - to resign from the game\nType: 'possible <COORDINATES OF PIECE>' - to highlight all the possible moves for the piece in that square\nType: 'help' - to find out what you can do");
+                if (color == null){
+                    System.out.println("Type:'redraw' - to redraw the chessboard \nType: 'leave' - to leave the game\nType: 'possible <COORDINATES OF PIECE>' - to highlight all the possible moves for the piece in that square\nType: 'help' - to find out what you can do");
+                }else {
+                    System.out.println("Type:'redraw' - to redraw the chessboard \nType: 'leave' - to leave the game\nType: 'move <STARTING COORDINATE> <ENDING COORDINATE> <PROMOTION IF APPLICABLE>' - to move a piece from the starting coordinate to the ending coordinate for example a2 a3\nValid Promotions: 'queen','rook','bishop','knight'\nType: 'resign' - to resign from the game\nType: 'possible <COORDINATES OF PIECE>' - to highlight all the possible moves for the piece in that square\nType: 'help' - to find out what you can do");
+                }
+                ws.printTurn();
             } else if (words[0].equals("redraw") && words.length == 1) {
-                printer.printBoard(ws.curGame.getBoard(), color, null);
+                printer.printBoard(ws.curGame.getBoard(), color, null, null);
+                ws.printTurn();
             } else if (words[0].equals("leave") && words.length == 1) {
                 ws.send(gson.toJson(new Leave(auth, gameID)));
                 return;
-            } else if (words[0].equals("resign") && words.length == 1) {
+            } else if (words[0].equals("resign") && words.length == 1 && color != null) {
                 System.out.printf("\nAre you sure you want to resign? [type 'yes' to confirm anything else will cancel]");
                 Scanner scan = new Scanner(System.in);
                 String word = scan.nextLine();
@@ -46,29 +52,36 @@ public class GameplayUI {
                 }else{
                     System.out.println("never give up!! that's the attitude!!");
                 }
-            } else if (words[0].equals("move") && (words.length == 3 || words.length == 4)){
-                ChessPiece.PieceType promo;
-                if(words.length == 4){
-                    String piece = words[3];
-                    if(piece.equals("rook")){
-                        promo = ChessPiece.PieceType.ROOK;
-                    } else if (piece.equals("queen")) {
-                        promo = ChessPiece.PieceType.QUEEN;
-                    }else if (piece.equals("bishop")) {
-                        promo = ChessPiece.PieceType.BISHOP;
-                    }else if (piece.equals("knight")) {
-                        promo = ChessPiece.PieceType.KNIGHT;
-                    }else{
-                        throw new Exception("Invalid promotion piece");
-                    }
-                }else{
-                    promo = null;
+            } else if (color != null && words[0].equals("move") && (words.length == 3 || words.length == 4)){
+                if (ws.curGame.getTeamTurn() != color){
+                    System.out.println("Wait for your turn");
                 }
-                ChessMove move = new ChessMove(stringToPosition(words[1]), stringToPosition(words[2]), promo);
-                ws.send(gson.toJson(new MakeMove(auth, gameID, move)));
+                else {
+                    ChessPiece.PieceType promo;
+                    if (words.length == 4) {
+                        String piece = words[3];
+                        if (piece.equals("rook")) {
+                            promo = ChessPiece.PieceType.ROOK;
+                        } else if (piece.equals("queen")) {
+                            promo = ChessPiece.PieceType.QUEEN;
+                        } else if (piece.equals("bishop")) {
+                            promo = ChessPiece.PieceType.BISHOP;
+                        } else if (piece.equals("knight")) {
+                            promo = ChessPiece.PieceType.KNIGHT;
+                        } else {
+                            throw new Exception("Invalid promotion piece");
+                        }
+                    } else {
+                        promo = null;
+                    }
+                    ChessMove move = new ChessMove(stringToPosition(words[1]), stringToPosition(words[2]), promo);
+                    ws.send(gson.toJson(new MakeMove(auth, gameID, move)));
+                }
             } else if (words[0].equals("possible") && words.length == 2) {
-                Collection<ChessMove> valid = ws.curGame.validMoves(stringToPosition(words[1]));
-                printer.printBoard(ws.curGame.getBoard(), color, valid);
+                ChessPosition start = stringToPosition(words[1]);
+                Collection<ChessMove> valid = ws.curGame.validMoves(start);
+                printer.printBoard(ws.curGame.getBoard(), color, valid, start);
+                ws.printTurn();
             }else{
                 System.out.println("invalid command try 'help'");
             }

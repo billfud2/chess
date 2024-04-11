@@ -33,7 +33,7 @@ public class WSClient extends Endpoint{
                 if (servMessage.getServerMessageType() == ServerMessage.ServerMessageType.LOAD_GAME){
                     LoadGame load = gson.fromJson(message, LoadGame.class);
                     curGame = load.game;
-                    BoardPrinter.printBoard(curGame.getBoard(), color, null);
+                    BoardPrinter.printBoard(curGame.getBoard(), color, null, null);
                 } else if (servMessage.getServerMessageType() == ServerMessage.ServerMessageType.NOTIFICATION) {
                     Notification note = gson.fromJson(message, Notification.class);
                     try {
@@ -51,6 +51,7 @@ public class WSClient extends Endpoint{
                     }
                     System.out.println("Error: " + err.errorMessage);
                 }
+                printTurn();
             }
             public void onClose(){
 
@@ -62,6 +63,13 @@ public class WSClient extends Endpoint{
         this.session.getBasicRemote().sendText(msg);
     }
     public void onOpen(Session session, EndpointConfig endpointConfig) {
+    }
+    public void printTurn(){
+        if(curGame.getTeamTurn() == ChessGame.TeamColor.WHITE){
+            System.out.printf("\n[WHITE TURN]>>> ");
+        } else if (curGame.getTeamTurn() == ChessGame.TeamColor.BLACK) {
+            System.out.printf("\n[BLACK TURN]>>> ");
+        }
     }
 
 

@@ -35,11 +35,12 @@ public class BoardPrinter {
     private static Collection<ChessPosition> ends;
 
 
-    public static void printBoard(ChessBoard board, ChessGame.TeamColor color, Collection<ChessMove> valid) {
+    public static void printBoard(ChessBoard board, ChessGame.TeamColor color, Collection<ChessMove> valid, ChessPosition start) {
         ends = new HashSet<>();
-        start = null;
         if (valid != null){
-            createValid(valid);
+            for( ChessMove move : valid){
+                ends.add(move.getEndPosition());
+            }
         }
         curBoard = board;
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
@@ -194,15 +195,5 @@ public class BoardPrinter {
             }
         }
         return player;
-    }
-    private static void createValid(Collection<ChessMove> valid){
-        Boolean has = false;
-        for( ChessMove move : valid){
-            if(!has){
-                start = move.getStartPosition();
-                has = true;
-            }
-            ends.add(move.getEndPosition());
-        }
     }
 }
