@@ -65,9 +65,16 @@ public class Server {
                 sendOther(gson.toJson(new LoadGame(game)), null);
                 sendOther(gson.toJson(new Notification("Piece moved from " + make.move.getStartPosition().toString() + "to " + make.move.getEndPosition().toString())), session);
             } else if (command.getCommandType() == UserGameCommand.CommandType.LEAVE) {
-
+                Leave lev = gson.fromJson(message, Leave.class);
+                String name = AccessAuthData.getAuth(lev.getAuthString()).username();
+                AccessGameData.removePlayer(lev.gameID, name);
+                sendOther(name + " left", session);
             } else if (command.getCommandType() == UserGameCommand.CommandType.RESIGN) {
-
+                Resign res = gson.fromJson(message, Resign.class);
+                ChessGame game = AccessGameData.getGame(res.gameID).game();
+                game.isOver = true;
+                String name = AccessAuthData.getAuth(res.getAuthString()).username();
+                sendOther(name + " resigned the game is over", null);
             }
         }catch(Exception e){
             System.out.println(e.getMessage());

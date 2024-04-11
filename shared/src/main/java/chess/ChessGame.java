@@ -12,8 +12,10 @@ import java.util.HashSet;
 public class ChessGame {
     TeamColor turn;
     ChessBoard board;
+    public Boolean isOver;
     public ChessGame() {
         this.turn = TeamColor.WHITE;
+        this.isOver = false;
     }
 
     /**
@@ -82,6 +84,9 @@ public class ChessGame {
         ChessPosition start = move.getStartPosition();
         ChessPosition end = move.getEndPosition();
         ChessPiece piece = this.board.getPiece(start);
+        if (isOver == true){
+            throw new InvalidMoveException("Game is over no moves can be made");
+        }
         if (validMoves(start).contains(move) && piece.getTeamColor() == getTeamTurn()) {
             move(start, end);
 //            System.out.println(this.board.getPiece(end).getTeamColor() + "," + this.board.getPiece(end).getPieceType() +" Moves: {" +  start.getRow() + "," + start.getColumn() + "} -> {" + end.getRow() + "," + end.getColumn() + "}");
@@ -155,6 +160,7 @@ public class ChessGame {
                     }
                 }
             }
+            this.isOver = true;
             return true;
         }
         return false;
@@ -181,6 +187,7 @@ public class ChessGame {
                     }
                 }
             }
+            this.isOver = true;
             return true;
         }
         return false;

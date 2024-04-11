@@ -97,6 +97,23 @@ public class AccessGameData {
             throw new DataAccessException(e.getMessage());
         }
     }
+    static public void removePlayer(int gameID, String username) throws DataAccessException {
+        GameData data = getGame(gameID);
+        String colString;
+        if (data.whiteUsername().equals(username)){
+            colString = "whiteUsername";
+        }else if(data.blackUsername().equals(username)){
+            colString = "blackUsername";
+        }else{
+            return;
+        }
+        try (var preparedStatement = conn.prepareStatement("DELETE FROM game WHERE " + colString + "=?")) {
+            preparedStatement.setString(1, username);
+            preparedStatement.executeQuery();
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage());
+        }
+    }
 
 
     static public void addBlackPlayer(String username, int gameID) throws AlreadyTakenException, DataAccessException, BadRequestException {
