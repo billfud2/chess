@@ -30,15 +30,19 @@ public class BoardPrinter {
 
 
     private static final String EMPTY = " ";
-    private static ChessBoard board;
+    private static ChessBoard curBoard;
 
 
-
-
+    public static void main(String[] args) {
+        ChessBoard ba = new ChessBoard();
+        ba.resetBoard();
+        printBoard(ba);
+    }
     public static void printBoard(ChessBoard board) {
-        board = board;
+        curBoard = board;
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(ERASE_SCREEN);
+        out.print("\n");
         drawBoarderRow(out, b1Headers);
         b1DrawChessBoard(out);
         drawBoarderRow(out, b1Headers);
@@ -134,7 +138,7 @@ public class BoardPrinter {
         out.print(EMPTY);
         }
     private static pieceString getPiece(int row, int col){
-        ChessPiece piece = board.getPiece(new ChessPosition(row, col));
+        ChessPiece piece = curBoard.getPiece(new ChessPosition(row, col));
         pieceString player = new pieceString(" ",SET_TEXT_COLOR_BLACK);
         if (piece != null) {
             ChessGame.TeamColor team = piece.getTeamColor();

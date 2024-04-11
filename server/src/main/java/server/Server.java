@@ -17,13 +17,14 @@ import webSocketMessages.serverMessages.*;
 import webSocketMessages.userCommands.*;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Set;
 
 
 @WebSocket
 public class Server {
     static Gson gson = new Gson();
-    static Set<Session> sessions;
+    static Set<Session> sessions = new HashSet<>();
     public static void main(String[] args) {
         new Server().run(8080);
     }
@@ -57,13 +58,19 @@ public class Server {
                 session.getRemote().sendString(gson.toJson(new LoadGame(AccessGameData.getGame(obser.gameID).game())));
                 sendOther(gson.toJson(new Notification(AccessAuthData.getAuth(obser.getAuthString()).username() + " joined as an observer")), session);
             } else if (command.getCommandType() == UserGameCommand.CommandType.MAKE_MOVE) {
+                MakeMove make = gson.fromJson(message, MakeMove.class);
+                ChessGame game = AccessGameData.getGame(make.gameID).game();
+                game.makeMove(make.move);
+                AccessGameData.updateGame(make.gameID, gson.toJson(game));
+                sendOther(gson.toJson(new LoadGame(game)), null);
+                sendOther(gson.toJson(new Notification("Piece moved from " + make.move.getStartPosition().toString() + "to " + make.move.getEndPosition().toString())), session);
             } else if (command.getCommandType() == UserGameCommand.CommandType.LEAVE) {
 
             } else if (command.getCommandType() == UserGameCommand.CommandType.RESIGN) {
 
             }
         }catch(Exception e){
-
+            System.out.println(e.getMessage());
         }
     }
     public void stop() {

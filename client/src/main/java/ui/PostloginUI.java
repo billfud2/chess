@@ -23,6 +23,7 @@ public class PostloginUI {
     static Gson gson = new Gson();
     private ArrayList<GameData> games;
     static WSClient ws;
+
     public boolean run(ServerFacade facade, String username){
         System.out.printf("You logged in as " + username + "!\nWelcome " + username);
         try {games = facade.listGames().games();
@@ -69,12 +70,12 @@ public class PostloginUI {
                         if (words[2].equals("WHITE")) {
                             facade.joinGame(new JoinGameRequest(WHITE, games.get(id).gameID()));
                             ws = new WSClient("localhost", desPort);
-                            ws.send(gson.toJson(new JoinPlayer(facade.authLog, id, WHITE)));
+                            ws.send(gson.toJson(new JoinPlayer(facade.authLog, games.get(id).gameID(), WHITE)));
                             new GameplayUI().run(WHITE);
                         } else if (words[2].equals("BLACK")) {
                             facade.joinGame(new JoinGameRequest(BLACK, games.get(id).gameID()));
                             ws = new WSClient("localhost", desPort);
-                            ws.send(gson.toJson(new JoinPlayer(facade.authLog, id, BLACK)));
+                            ws.send(gson.toJson(new JoinPlayer(facade.authLog, games.get(id).gameID(), BLACK)));
                             new GameplayUI().run(BLACK);
                         } else {
                             System.out.println("not a team color");
@@ -90,11 +91,11 @@ public class PostloginUI {
             else if(words[0].equals("observe")&& words.length == 2){
                 try {
 
-                    int id = Integer.parseInt(words[1]);
-                    if(id > 0 && id <= games.size()) {
+                    int id = Integer.parseInt(words[1]) - 1;
+                    if(id >= 0 && id <= games.size()) {
                         facade.joinGame(new JoinGameRequest(null, games.get(id).gameID()));
                         ws = new WSClient("localhost", desPort);
-                        ws.send(gson.toJson(new JoinObserver(facade.authLog, id)));
+                        ws.send(gson.toJson(new JoinObserver(facade.authLog, games.get(id).gameID())));
                         new GameplayUI().run(null);
                     }
                     else{

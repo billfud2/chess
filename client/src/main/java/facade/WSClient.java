@@ -10,12 +10,14 @@ import javax.websocket.*;
 import java.net.URI;
 import java.util.Scanner;
 
-public class WSClient {
+public class WSClient extends Endpoint{
+
     static WSClient instance;
     static String websiteURL;
     static Gson gson = new Gson();
     public static String authLog;
     public Session session;
+
     public WSClient(String URL, int port) throws Exception {
         websiteURL = "ws://" + URL + ":" + Integer.toString(port);
         URI uri = new URI(websiteURL + "/connect");
@@ -42,5 +44,8 @@ public class WSClient {
     public void send(String msg) throws Exception {
         this.session.getBasicRemote().sendText(msg);
     }
+    public void onOpen(Session session, EndpointConfig endpointConfig) {
+    }
+
 
 }

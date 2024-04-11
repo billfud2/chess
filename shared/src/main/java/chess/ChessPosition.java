@@ -33,6 +33,28 @@ public class ChessPosition {
     public int getColumn() {
         return this.col+1;
     }
+    public String toString(){
+        String s = "";
+        if(col == 0){
+            s = "a";
+        } else if (col == 1) {
+            s = "b";
+        }else if (col == 2) {
+            s = "c";
+        }else if (col == 3) {
+            s = "d";
+        }else if (col == 4) {
+            s = "e";
+        }else if (col == 5) {
+            s = "f";
+        }else if (col == 6) {
+            s = "g";
+        }else if (col == 7) {
+            s = "h";
+        }
+        s = s + Integer.toString(getRow());
+        return s;
+    }
 
     @Override
     public boolean equals(Object o) {

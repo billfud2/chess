@@ -69,7 +69,7 @@ public class DatabaseManager {
                 whiteUsername VARCHAR(50),
                 blackUsername VARCHAR(50),
                 gameName VARCHAR(50) NOT NULL,
-                game VARCHAR(1000) NOT NULL
+                game VARCHAR(8000) NOT NULL
             )""";
             try (var createGameStatement = conn.prepareStatement(createGameTable)) {
                 createGameStatement.executeUpdate();

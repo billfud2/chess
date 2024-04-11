@@ -1,5 +1,6 @@
 package dataAccess;
 
+import chess.ChessBoard;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import model.AuthData;
@@ -35,6 +36,9 @@ public class AccessGameData {
     static public Integer createGame(String gameName) throws BadRequestException, DataAccessException {
         if (gameName != null) {
             ChessGame game = new ChessGame();
+            ChessBoard bord = new ChessBoard();
+            bord.resetBoard();
+            game.setBoard(bord);
             try (var preparedStatement = conn.prepareStatement("INSERT INTO game (gameName, game) VALUES(?, ?)", Statement.RETURN_GENERATED_KEYS)) {
                 preparedStatement.setString(1, gameName);
                 preparedStatement.setString(2, gson.toJson(game));
@@ -42,8 +46,8 @@ public class AccessGameData {
                 var generatedKeys = preparedStatement.getGeneratedKeys();
                 if (generatedKeys.next()) {
                     // Get the value of the auto_increment column
-                    return generatedKeys.getInt(1);
 
+                    return generatedKeys.getInt(1);
                 } else{
                     throw new DataAccessException("game not created");
                 }
@@ -85,6 +89,15 @@ public class AccessGameData {
             throw new DataAccessException(e.getMessage());
         }
     }
+    static public void updateGame(int gameID, String gameString) throws DataAccessException {
+        try (var preparedStatement = conn.prepareStatement("UPDATE game SET game = " + gameString +" WHERE gameID=?")) {
+            preparedStatement.setInt(1, gameID);
+            preparedStatement.executeQuery();
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage());
+        }
+    }
+
 
     static public void addBlackPlayer(String username, int gameID) throws AlreadyTakenException, DataAccessException, BadRequestException {
         if(getGame(gameID) == null){
