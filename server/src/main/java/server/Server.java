@@ -44,21 +44,25 @@ public class Server {
     }
     @OnWebSocketMessage
     public void onMessage(Session session, String message) throws Exception {
-        UserGameCommand command = gson.fromJson(message, UserGameCommand.class);
-        if (command.getCommandType() == UserGameCommand.CommandType.JOIN_PLAYER){
-            JoinPlayer join = gson.fromJson(message, JoinPlayer.class);
-            sessions.add(session);
-            session.getRemote().sendString(gson.toJson(new LoadGame(AccessGameData.getGame(join.gameID).game())));
-            sendOther(gson.toJson(new Notification(AccessAuthData.getAuth(join.getAuthString()).username() + " joined as " + join.color)), session);
-        } else if (command.getCommandType() == UserGameCommand.CommandType.JOIN_OBSERVER) {
-            JoinObserver obser = gson.fromJson(message, JoinObserver.class);
-            sessions.add(session);
-            session.getRemote().sendString(gson.toJson(new LoadGame(AccessGameData.getGame(obser.gameID).game())));
-            sendOther(gson.toJson(new Notification(AccessAuthData.getAuth(obser.getAuthString()).username() + " joined as an observer")), session);
-        } else if (command.getCommandType() == UserGameCommand.CommandType.MAKE_MOVE) {
-        } else if (command.getCommandType() == UserGameCommand.CommandType.LEAVE) {
+        try {
+            UserGameCommand command = gson.fromJson(message, UserGameCommand.class);
+            if (command.getCommandType() == UserGameCommand.CommandType.JOIN_PLAYER) {
+                JoinPlayer join = gson.fromJson(message, JoinPlayer.class);
+                sessions.add(session);
+                session.getRemote().sendString(gson.toJson(new LoadGame(AccessGameData.getGame(join.gameID).game())));
+                sendOther(gson.toJson(new Notification(AccessAuthData.getAuth(join.getAuthString()).username() + " joined as " + join.color)), session);
+            } else if (command.getCommandType() == UserGameCommand.CommandType.JOIN_OBSERVER) {
+                JoinObserver obser = gson.fromJson(message, JoinObserver.class);
+                sessions.add(session);
+                session.getRemote().sendString(gson.toJson(new LoadGame(AccessGameData.getGame(obser.gameID).game())));
+                sendOther(gson.toJson(new Notification(AccessAuthData.getAuth(obser.getAuthString()).username() + " joined as an observer")), session);
+            } else if (command.getCommandType() == UserGameCommand.CommandType.MAKE_MOVE) {
+            } else if (command.getCommandType() == UserGameCommand.CommandType.LEAVE) {
 
-        } else if (command.getCommandType() == UserGameCommand.CommandType.RESIGN) {
+            } else if (command.getCommandType() == UserGameCommand.CommandType.RESIGN) {
+
+            }
+        }catch(Exception e){
 
         }
     }

@@ -12,7 +12,6 @@ import java.nio.charset.StandardCharsets;
 import static ui.EscapeSequences.*;
 
 public class BoardPrinter {
-    private static ChessBoard board = new ChessBoard();
     private static final int BOARD_SIZE_IN_SQUARES = 8;
     private static final int SQUARE_SIZE_IN_CHARS = 3;
     private static final String h = "h";
@@ -31,11 +30,13 @@ public class BoardPrinter {
 
 
     private static final String EMPTY = " ";
+    private static ChessBoard board;
 
 
 
 
-    public static void printBoard() {
+    public static void printBoard(ChessBoard board) {
+        board = board;
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(ERASE_SCREEN);
         drawBoarderRow(out, b1Headers);
