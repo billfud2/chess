@@ -53,16 +53,11 @@ public class WSClient extends Endpoint{
                 }
                 printTurn();
             }
-            public void onClose(){
-
-            }
         });
     }
 
     public void send(String msg) throws Exception {
         this.session.getBasicRemote().sendText(msg);
-    }
-    public void onOpen(Session session, EndpointConfig endpointConfig) {
     }
     public void printTurn(){
         if(curGame.getTeamTurn() == ChessGame.TeamColor.WHITE){
@@ -73,4 +68,7 @@ public class WSClient extends Endpoint{
     }
 
 
+    public void onOpen(Session session, EndpointConfig endpointConfig) {
+
+    }
 }

@@ -44,8 +44,8 @@ public class ServerFacade {
         if (connection.getResponseCode() != HttpURLConnection.HTTP_OK)  {
             InputStream resBody = connection.getErrorStream();
             // Read and process error response body from InputStream ...
-            String Error = new String(resBody.readAllBytes(), "UTF-8");
-            throw new IOException(Error);
+            String error = new String(resBody.readAllBytes(), "UTF-8");
+            throw new IOException(error);
         }
 
     }
@@ -75,8 +75,8 @@ public class ServerFacade {
         else {
             InputStream resBody = connection.getErrorStream();
             // Read and process error response body from InputStream ...
-            String Error = new String(resBody.readAllBytes(), "UTF-8");
-            throw new IOException(Error);
+            String error = new String(resBody.readAllBytes(), "UTF-8");
+            throw new IOException(error);
         }
     }
     public static void logout() throws IOException{
@@ -91,8 +91,8 @@ public class ServerFacade {
         if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
             InputStream resBody = connection.getErrorStream();
             // Read and process error response body from InputStream ...
-            String Error = new String(resBody.readAllBytes(), "UTF-8");
-            throw new IOException(Error);
+            String error = new String(resBody.readAllBytes(), "UTF-8");
+            throw new IOException(error);
         }
     }
     public static ListGamesResult listGames()throws IOException{
@@ -112,8 +112,8 @@ public class ServerFacade {
         else {
             InputStream resBody = connection.getErrorStream();
             // Read and process error response body from InputStream ...
-            String Error = new String(resBody.readAllBytes(), "UTF-8");
-            throw new IOException(Error);
+            String error = new String(resBody.readAllBytes(), "UTF-8");
+            throw new IOException(error);
         }
     }
     public static int createGame(String gameName)throws IOException{
@@ -143,8 +143,8 @@ public class ServerFacade {
         else {
             InputStream resBody = connection.getErrorStream();
             // Read and process error response body from InputStream ...
-            String Error = new String(resBody.readAllBytes(), "UTF-8");
-            throw new IOException(Error);
+            String error = new String(resBody.readAllBytes(), "UTF-8");
+            throw new IOException(error);
         }
     }
     public static void joinGame(JoinGameRequest join) throws IOException{
@@ -163,8 +163,8 @@ public class ServerFacade {
         if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
             InputStream resBody = connection.getErrorStream();
             // Read and process error response body from InputStream ...
-            String Error = new String(resBody.readAllBytes(), "UTF-8");
-            throw new IOException(Error);
+            String error = new String(resBody.readAllBytes(), "UTF-8");
+            throw new IOException(error);
         }
     }
 }

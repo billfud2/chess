@@ -1,11 +1,10 @@
 package ui;
 
 import chess.*;
-import recordsForReqAndRes.pieceString;
+import recordsForReqAndRes.PieceString;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -59,17 +58,6 @@ public class BoardPrinter {
         out.print("\u001B[49m");
         out.print("\u001B[0m");
     }
-//    private static void drawDivider(PrintStream out){
-//        for (int boardCol = 0; boardCol < BOARD_SIZE_IN_SQUARES + 2; ++boardCol) {
-//            out.print(SET_BG_COLOR_BLACK);
-//            out.print(SET_TEXT_COLOR_BLACK);
-//            out.print(EMPTY);
-//            out.print(" ");
-//            out.print(EMPTY);
-//        }
-//        out.print(SET_BG_COLOR_DARK_GREY);
-//        out.println();
-//    }
 
     private static void drawBoarderRow(PrintStream out, String[] headers) {
         drawHeader(out, " ");
@@ -128,7 +116,7 @@ public class BoardPrinter {
         }
         else{
             ChessPosition pos = new ChessPosition(row, boardCol);
-            pieceString piece = getPiece(row, boardCol);
+            PieceString piece = getPiece(row, boardCol);
             if(color == 0 ){
                 String background = SET_BG_COLOR_WHITE;
                 if(!ends.isEmpty() && ends.contains(pos)){
@@ -158,39 +146,39 @@ public class BoardPrinter {
         out.print(text);
         out.print(EMPTY);
         }
-    private static pieceString getPiece(int row, int col){
+    private static PieceString getPiece(int row, int col){
         ChessPiece piece = curBoard.getPiece(new ChessPosition(row, col));
-        pieceString player = new pieceString(" ",SET_TEXT_COLOR_BLACK);
+        PieceString player = new PieceString(" ",SET_TEXT_COLOR_BLACK);
         if (piece != null) {
             ChessGame.TeamColor team = piece.getTeamColor();
             ChessPiece.PieceType type = piece.getPieceType();
             if (team.equals(ChessGame.TeamColor.WHITE)) {
                 if (type == ChessPiece.PieceType.ROOK) {
-                    player = new pieceString("R", whiteColor);
+                    player = new PieceString("R", whiteColor);
                 } else if (type == ChessPiece.PieceType.KNIGHT) {
-                    player = new pieceString("N", whiteColor);
+                    player = new PieceString("N", whiteColor);
                 } else if (type == ChessPiece.PieceType.BISHOP) {
-                    player = new pieceString("B", whiteColor);
+                    player = new PieceString("B", whiteColor);
                 } else if (type == ChessPiece.PieceType.KING) {
-                    player = new pieceString("K", whiteColor);
+                    player = new PieceString("K", whiteColor);
                 } else if (type == ChessPiece.PieceType.QUEEN) {
-                    player = new pieceString("Q", whiteColor);
+                    player = new PieceString("Q", whiteColor);
                 } else if (type == ChessPiece.PieceType.PAWN) {
-                    player = new pieceString("P", whiteColor);
+                    player = new PieceString("P", whiteColor);
                 }
             } else {
                 if (type.equals(ChessPiece.PieceType.ROOK)) {
-                    player = new pieceString("R", blackColor);
+                    player = new PieceString("R", blackColor);
                 } else if (type == ChessPiece.PieceType.KNIGHT) {
-                    player = new pieceString("N", blackColor);
+                    player = new PieceString("N", blackColor);
                 } else if (type == ChessPiece.PieceType.BISHOP) {
-                    player = new pieceString("B", blackColor);
+                    player = new PieceString("B", blackColor);
                 } else if (type == ChessPiece.PieceType.KING) {
-                    player = new pieceString("K", blackColor);
+                    player = new PieceString("K", blackColor);
                 } else if (type == ChessPiece.PieceType.QUEEN) {
-                    player = new pieceString("Q", blackColor);
+                    player = new PieceString("Q", blackColor);
                 } else if (type == ChessPiece.PieceType.PAWN) {
-                    player = new pieceString("P", blackColor);
+                    player = new PieceString("P", blackColor);
                 }
             }
         }
