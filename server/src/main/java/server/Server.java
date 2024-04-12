@@ -22,14 +22,13 @@ import webSocketMessages.serverMessages.Error;
 import webSocketMessages.userCommands.*;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 
 @WebSocket
 public class Server {
     static Gson gson = new Gson();
-    static Set<Session> sessions = new HashSet<>();
+    static Map<Integer, Collection<SessionData>> sessions = new HashMap<>();
     static GameService gameServ;
 
 
@@ -57,12 +56,31 @@ public class Server {
             UserGameCommand command = gson.fromJson(message, UserGameCommand.class);
             if (command.getCommandType() == UserGameCommand.CommandType.JOIN_PLAYER) {
                 JoinPlayer join = gson.fromJson(message, JoinPlayer.class);
-                sessions.add(session);
+                String user = AccessAuthData.getAuth(join.getAuthString()).username();
+                if(join.color == ChessGame.TeamColor.WHITE && user.equals(AccessGameData.getGame(join.gameID).whiteUsername())){
+                } else if (join.color == ChessGame.TeamColor.BLACK && user.equals(AccessGameData.getGame(join.gameID).blackUsername())) {
+                }else{
+                    throw new Exception("tried to join a taken game");
+                }
+                if (sessions.keySet().contains(join.gameID)){
+                    sessions.get(join.gameID).add(new SessionData(user, session));
+                }else{
+                    HashSet<SessionData> hash = new HashSet<>();
+                    hash.add(new SessionData(user, session));
+                    sessions.put(join.gameID,hash);
+                }
                 session.getRemote().sendString(gson.toJson(new LoadGame(AccessGameData.getGame(join.gameID).game())));
                 sendOther(AccessAuthData.getAuth(join.getAuthString()).username() + " joined as " + join.color, session);
             } else if (command.getCommandType() == UserGameCommand.CommandType.JOIN_OBSERVER) {
                 JoinObserver obser = gson.fromJson(message, JoinObserver.class);
-                sessions.add(session);
+                String user = AccessAuthData.getAuth(obser.getAuthString()).username();
+                if (sessions.keySet().contains(obser.gameID)){
+                    sessions.get(obser.gameID).add(new SessionData(user, session));
+                }else{
+                    HashSet<SessionData> hash = new HashSet<>();
+                    hash.add(new SessionData(user, session));
+                    sessions.put(obser.gameID,hash);
+                }
                 session.getRemote().sendString(gson.toJson(new LoadGame(AccessGameData.getGame(obser.gameID).game())));
                 sendOther(AccessAuthData.getAuth(obser.getAuthString()).username() + " joined as an observer", session);
             } else if (command.getCommandType() == UserGameCommand.CommandType.MAKE_MOVE) {

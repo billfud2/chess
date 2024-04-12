@@ -49,4 +49,39 @@ public class PieceMovesCalculator {
             }
         }
     }
+    public void moveTake(int row, int col, int rowInc, int colInc, ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor other){
+        if(row>1 && row<8 && col<8 && col>1){
+            row += rowInc;
+            col += colInc;
+            this.position = new ChessPosition(row,col);
+            ChessPiece spot = board.getPiece(new ChessPosition(row,col));
+            if (spot != null && spot.getTeamColor() == other){
+                if (row == 8) {
+                    promotion(myPosition, this.position);
+                }else {
+                    this.possible.add(new ChessMove(myPosition, this.position, null));
+                }
+            }
+        }
+    }
+    public void promotion(ChessPosition start, ChessPosition end){
+        this.possible.add(new ChessMove(start, end, ChessPiece.PieceType.ROOK));
+        this.possible.add(new ChessMove(start, end, ChessPiece.PieceType.BISHOP));
+        this.possible.add(new ChessMove(start, end, ChessPiece.PieceType.KNIGHT));
+        this.possible.add(new ChessMove(start, end, ChessPiece.PieceType.QUEEN));
+    }
+    public void checkJump(int rowInc, int colInc,int rowMin, int colMin, int rowMax, int colMax, int row, int col, ChessBoard board, ChessPosition myPosition){
+        if(row>rowMin && col>colMin && col<colMax && row<rowMax) {
+            row += rowInc;
+            col += colInc;
+            // System.out.println("King Position: {" + row + "," + col + "}");
+            this.position = new ChessPosition(row, col);
+            ChessPiece spot = board.getPiece(new ChessPosition(row, col));
+            if (spot == null) {
+                this.possible.add(new ChessMove(myPosition, this.position, null));
+            } else if (spot.getTeamColor() != this.myPiece.getTeamColor()) {
+                this.possible.add(new ChessMove(myPosition, this.position, null));
+            }
+        }
+    }
 }

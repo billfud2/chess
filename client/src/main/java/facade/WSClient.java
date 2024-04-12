@@ -28,6 +28,7 @@ public class WSClient extends Endpoint{
         this.session = container.connectToServer(this, uri);
 
         this.session.addMessageHandler(new MessageHandler.Whole<String>() {
+            @Override
             public void onMessage(String message) {
                 ServerMessage servMessage = gson.fromJson(message, ServerMessage.class);
                 if (servMessage.getServerMessageType() == ServerMessage.ServerMessageType.LOAD_GAME){
@@ -57,7 +58,7 @@ public class WSClient extends Endpoint{
         }
     }
 
-
+    @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {
 
     }
