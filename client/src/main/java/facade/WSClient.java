@@ -36,19 +36,9 @@ public class WSClient extends Endpoint{
                     BoardPrinter.printBoard(curGame.getBoard(), color, null, null);
                 } else if (servMessage.getServerMessageType() == ServerMessage.ServerMessageType.NOTIFICATION) {
                     Notification note = gson.fromJson(message, Notification.class);
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
                     System.out.println(note.message);
                 } else if (servMessage.getServerMessageType() == ServerMessage.ServerMessageType.ERROR) {
                     Error err = gson.fromJson(message, Error.class);
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
                     System.out.println("Error: " + err.errorMessage);
                 }
                 printTurn();

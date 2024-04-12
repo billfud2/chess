@@ -148,22 +148,25 @@ public class ChessGame {
      */
     public boolean isInCheckmate(TeamColor teamColor) {
         if (isInCheck(teamColor)){
-            for (int i = 1; i <= 8; i++) {
-                for (int j = 1; j <= 8; j++) {
-                    ChessPosition pos = new ChessPosition(i,j);
-                    ChessPiece piece = this.board.getPiece(pos);
-                    if (piece != null && piece.getTeamColor() == teamColor) {
-                        Collection<ChessMove> moves = validMoves(pos);
-                        if (!moves.isEmpty()) {
-                            return false;
-                        }
+            return cantMove(teamColor);
+        }
+        return false;
+    }
+    public boolean cantMove(TeamColor teamColor){
+        for (int i = 1; i <= 8; i++) {
+            for (int j = 1; j <= 8; j++) {
+                ChessPosition pos = new ChessPosition(i,j);
+                ChessPiece piece = this.board.getPiece(pos);
+                if (piece != null && piece.getTeamColor() == teamColor) {
+                    Collection<ChessMove> moves = validMoves(pos);
+                    if (!moves.isEmpty()) {
+                        return false;
                     }
                 }
             }
-            this.isOver = true;
-            return true;
         }
-        return false;
+        this.isOver = true;
+        return true;
     }
 
     /**
@@ -175,20 +178,7 @@ public class ChessGame {
      */
     public boolean isInStalemate(TeamColor teamColor) {
         if (!isInCheck(teamColor)){
-            for (int i = 1; i <= 8; i++) {
-                for (int j = 1; j <= 8; j++) {
-                    ChessPosition pos = new ChessPosition(i,j);
-                    ChessPiece piece = this.board.getPiece(pos);
-                    if (piece != null && piece.getTeamColor() == teamColor) {
-                        Collection<ChessMove> moves = validMoves(pos);
-                        if (!moves.isEmpty()) {
-                            return false;
-                        }
-                    }
-                }
-            }
-            this.isOver = true;
-            return true;
+            return cantMove(teamColor);
         }
         return false;
     }

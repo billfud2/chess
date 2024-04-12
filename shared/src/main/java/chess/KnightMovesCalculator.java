@@ -16,6 +16,7 @@ public class KnightMovesCalculator extends PieceMovesCalculator {
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
         // Check to see if it can move up 2 and 1 to the right
+
         if(row<7 && col<8) {
             row +=2;
             col++;
