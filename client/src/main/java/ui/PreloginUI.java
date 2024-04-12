@@ -26,7 +26,7 @@ public class PreloginUI {
                         break;
                     }
                 }catch(Exception e){
-                    System.out.println(e.getMessage() + "try again");
+                    System.out.println("try again");
                 }
             }
             else if(words[0].equals("login") && words.length == 3){
@@ -37,7 +37,7 @@ public class PreloginUI {
                         break;
                     }
                 }catch(Exception e){
-                    System.out.println(e.getMessage() + "try again");
+                    System.out.println("try again");
                 }
             }
             else if(words[0].equals("quit")){

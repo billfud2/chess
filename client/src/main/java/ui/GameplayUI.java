@@ -17,13 +17,6 @@ public class GameplayUI {
     
 
     public void run(ChessGame.TeamColor color, WSClient ws, int gameID, String auth) {
-        if (color == null) {
-            System.out.println("\n[OBSERVING]");
-        } else if (color == WHITE) {
-            System.out.println("\n[PLAYING_AS_WHITE]");
-        } else {
-            System.out.println("\n[PLAYING_AS_BLACK]");
-        }
         while (true) {
             try {
             Scanner scanner = new Scanner(System.in);

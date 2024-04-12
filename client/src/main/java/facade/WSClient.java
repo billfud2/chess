@@ -20,6 +20,7 @@ public class WSClient extends Endpoint{
     public static String authLog;
     public Session session;
     public ChessGame curGame;
+    public Boolean failedLog;
 
     public WSClient(String URL, int port, ChessGame.TeamColor color) throws Exception {
         websiteURL = "ws://" + URL + ":" + Integer.toString(port);

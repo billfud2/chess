@@ -98,7 +98,7 @@ public class AccessGameData {
             throw new DataAccessException(e.getMessage());
         }
     }
-    static public void removePlayer(int gameID, String username) throws DataAccessException {
+    static public void removePlayer(int gameID, String username) throws Exception {
         GameData data = getGame(gameID);
         String colString;
         if (data.whiteUsername().equals(username)){
@@ -106,11 +106,10 @@ public class AccessGameData {
         }else if(data.blackUsername().equals(username)){
             colString = "blackUsername";
         }else{
-            return;
+            throw new Exception("not part of the game");
         }
-        try (var preparedStatement = conn.prepareStatement("DELETE FROM game WHERE ? = ?")) {
-            preparedStatement.setString(1, colString);
-            preparedStatement.setString(2, username);
+        try (var preparedStatement = conn.prepareStatement("UPDATE game SET "+ colString +" = NULL WHERE gameID=?")) {
+            preparedStatement.setInt(1, gameID);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage());
