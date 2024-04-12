@@ -6,6 +6,7 @@ import dataAccess.AccessAuthData;
 import dataAccess.AccessGameData;
 import dataAccess.AccessUserData;
 import dataAccess.DataAccessException;
+import model.AuthData;
 import model.GameData;
 import model.UserData;
 import org.eclipse.jetty.websocket.api.Session;
@@ -56,20 +57,21 @@ public class Server {
             UserGameCommand command = gson.fromJson(message, UserGameCommand.class);
             if (command.getCommandType() == UserGameCommand.CommandType.JOIN_PLAYER) {
                 JoinPlayer join = gson.fromJson(message, JoinPlayer.class);
-                String user = AccessAuthData.getAuth(join.getAuthString()).username();
-                if(join.color == ChessGame.TeamColor.WHITE && user.equals(AccessGameData.getGame(join.gameID).whiteUsername())){
-                } else if (join.color == ChessGame.TeamColor.BLACK && user.equals(AccessGameData.getGame(join.gameID).blackUsername())) {
+                AuthData auth = AccessAuthData.getAuth(join.getAuthString());
+                String user = auth.username();
+                GameData gData = AccessGameData.getGame(join.gameID);
+                if(join.playerColor.equals(ChessGame.TeamColor.WHITE) && user.equals(gData.whiteUsername())){
+                } else if (join.playerColor.equals(ChessGame.TeamColor.BLACK) && user.equals(gData.blackUsername())) {
                 }else{
                     throw new Exception("tried to join a taken game");
                 }
                 if (!sessions.keySet().contains(join.gameID)){
                     sessions.put(join.gameID,new SessionData(new HashMap<>()));
                 }else{
-
                     sessions.get(join.gameID).seshes().put(session,user);
                 }
-                session.getRemote().sendString(gson.toJson(new LoadGame(AccessGameData.getGame(join.gameID).game())));
-                sendOther(AccessAuthData.getAuth(join.getAuthString()).username() + " joined as " + join.color, user,join.gameID);
+                session.getRemote().sendString(gson.toJson(new LoadGame(gData.game())));
+                sendOther(user + " joined as " + join.playerColor, user,join.gameID);
             } else if (command.getCommandType() == UserGameCommand.CommandType.JOIN_OBSERVER) {
                 JoinObserver obser = gson.fromJson(message, JoinObserver.class);
                 String user = AccessAuthData.getAuth(obser.getAuthString()).username();
@@ -80,18 +82,18 @@ public class Server {
                     sessions.get(obser.gameID).seshes().put(session,user);
                 }
                 session.getRemote().sendString(gson.toJson(new LoadGame(AccessGameData.getGame(obser.gameID).game())));
-                sendOther(AccessAuthData.getAuth(obser.getAuthString()).username() + " joined as an observer", user,obser.gameID);
+                sendOther(user + " joined as an observer", user,obser.gameID);
             } else if (command.getCommandType() == UserGameCommand.CommandType.MAKE_MOVE) {
                 MakeMove make = gson.fromJson(message, MakeMove.class);
                 GameData data = AccessGameData.getGame(make.gameID);
                 ChessGame game = data.game();
+                String user = AccessAuthData.getAuth(make.getAuthString()).username();
                 if (game.isOver){
                     session.getRemote().sendString(gson.toJson(new Error("game has ended no moves can be made")));
                 }else {
                     game.makeMove(make.move);
                     AccessGameData.updateGame(make.gameID, gson.toJson(game));
-                    String user = AccessAuthData.getAuth(make.getAuthString()).username();
-                    sendOther(user + " moved " + make.move.getStartPosition().toString() + " -> " + make.move.getEndPosition().toString(), user,make.gameID);
+                    sendOther( user + " moved " + make.move.getStartPosition().toString() + " -> " + make.move.getEndPosition().toString(),user ,make.gameID);
                     sendGameAll(AccessGameData.getGame(make.gameID).game(),make.gameID);
                     if (game.isInCheckmate(ChessGame.TeamColor.WHITE)){
                         sendOther(data.whiteUsername() + " is in checkmate " + data.blackUsername() + " wins!!!", null,make.gameID);
