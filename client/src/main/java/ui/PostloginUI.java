@@ -64,13 +64,11 @@ public class PostloginUI {
                     int id = Integer.parseInt(words[1]) - 1;
                     if(id >= 0 && id <= games.size()) {
                         if (words[2].equals("WHITE")) {
-                            facade.joinGame(new JoinGameRequest(WHITE, games.get(id).gameID()));
                             ws = new WSClient("localhost", desPort, WHITE);
                             ws.send(gson.toJson(new JoinPlayer(facade.authLog, games.get(id).gameID(), WHITE)));
                             Thread.sleep(100);
                             new GameplayUI().run(WHITE, ws, games.get(id).gameID(), facade.authLog);
                         } else if (words[2].equals("BLACK")) {
-                            facade.joinGame(new JoinGameRequest(BLACK, games.get(id).gameID()));
                             ws = new WSClient("localhost", desPort, BLACK);
                             ws.send(gson.toJson(new JoinPlayer(facade.authLog, games.get(id).gameID(), BLACK)));
                             Thread.sleep(100);
