@@ -28,7 +28,7 @@ public class PostloginUI {
         System.out.printf("You logged in as " + username + "!\nWelcome " + username);
         try {games = facade.listGames().games();
         } catch(Exception e){
-            System.out.println(e.getMessage() + "\nSorry something went wrong");
+            System.out.println("Sorry something went wrong");
         }
         while (true) {
             System.out.printf("\n[LOGGED_IN]>>> ");
@@ -48,7 +48,7 @@ public class PostloginUI {
                 try {
                     facade.createGame(name);
                 }catch(Exception e){
-                    System.out.println(e.getMessage() + "\nSorry something went wrong");
+                    System.out.println("Sorry something went wrong");
                 }
             }
             else if(words[0].equals("list")){
@@ -60,7 +60,7 @@ public class PostloginUI {
                         i++;
                     }
                 }catch(Exception e){
-                    System.out.println(e.getMessage() + "\nSorry Something went wrong");
+                    System.out.println("Sorry Something went wrong");
                 }
             }
             else if(words[0].equals("join")&& words.length == 3){
@@ -68,11 +68,13 @@ public class PostloginUI {
                     int id = Integer.parseInt(words[1]) - 1;
                     if(id >= 0 && id <= games.size()) {
                         if (words[2].equals("WHITE")) {
+                            facade.joinGame(new JoinGameRequest(WHITE, games.get(id).gameID()));
                             ws = new WSClient("localhost", desPort, WHITE);
                             ws.send(gson.toJson(new JoinPlayer(facade.authLog, games.get(id).gameID(), WHITE)));
                             Thread.sleep(100);
                             new GameplayUI().run(WHITE, ws, games.get(id).gameID(), facade.authLog);
                         } else if (words[2].equals("BLACK")) {
+                            facade.joinGame(new JoinGameRequest(BLACK, games.get(id).gameID()));
                             ws = new WSClient("localhost", desPort, BLACK);
                             ws.send(gson.toJson(new JoinPlayer(facade.authLog, games.get(id).gameID(), BLACK)));
                             Thread.sleep(100);
@@ -85,13 +87,14 @@ public class PostloginUI {
                         System.out.println("not a valid game id try again");
                     }
                 }catch(Exception e){
-                    System.out.println(e.getMessage() + "\nSorry Something went wrong");
+                    System.out.println("Sorry Something went wrong");
                 }
             }
             else if(words[0].equals("observe")&& words.length == 2){
                 try {
                     int id = Integer.parseInt(words[1]) - 1;
                     if(id >= 0 && id <= games.size()) {
+                        facade.joinGame(new JoinGameRequest(null, games.get(id).gameID()));
                         ws = new WSClient("localhost", desPort, null);
                         ws.send(gson.toJson(new JoinObserver(facade.authLog, games.get(id).gameID())));
                         Thread.sleep(100);
@@ -101,7 +104,7 @@ public class PostloginUI {
                         System.out.println("not a valid game id try again");
                     }
                 }catch(Exception e){
-                    System.out.println(e.getMessage() + "\nSorry Something went wrong");
+                    System.out.println("Sorry Something went wrong");
                 }
             }
             else if(words[0].equals("logout")){

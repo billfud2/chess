@@ -14,7 +14,6 @@ import java.util.Scanner;
 
 public class WSClient extends Endpoint{
 
-    static WSClient instance;
     static String websiteURL;
     static Gson gson = new Gson();
     public static String authLog;

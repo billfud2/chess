@@ -58,37 +58,33 @@ public class Server {
             if (command.getCommandType() == UserGameCommand.CommandType.JOIN_PLAYER) {
                 JoinPlayer join = gson.fromJson(message, JoinPlayer.class);
                 sessions.add(session);
-                gameServ = new GameService();
-                gameServ.joinGame(new JoinGameRequest(join.color, join.gameID), join.getAuthString());
                 session.getRemote().sendString(gson.toJson(new LoadGame(AccessGameData.getGame(join.gameID).game())));
                 sendOther(AccessAuthData.getAuth(join.getAuthString()).username() + " joined as " + join.color, session);
             } else if (command.getCommandType() == UserGameCommand.CommandType.JOIN_OBSERVER) {
                 JoinObserver obser = gson.fromJson(message, JoinObserver.class);
                 sessions.add(session);
-                gameServ = new GameService();
-                gameServ.joinGame(new JoinGameRequest(null, obser.gameID), obser.getAuthString());
                 session.getRemote().sendString(gson.toJson(new LoadGame(AccessGameData.getGame(obser.gameID).game())));
                 sendOther(AccessAuthData.getAuth(obser.getAuthString()).username() + " joined as an observer", session);
             } else if (command.getCommandType() == UserGameCommand.CommandType.MAKE_MOVE) {
                 MakeMove make = gson.fromJson(message, MakeMove.class);
                 GameData data = AccessGameData.getGame(make.gameID);
                 ChessGame game = data.game();
-                if(game.isOver){
+                if (game.isOver){
                     session.getRemote().sendString(gson.toJson(new Error("game has ended no moves can be made")));
                 }else {
                     game.makeMove(make.move);
                     AccessGameData.updateGame(make.gameID, gson.toJson(game));
                     sendOther(AccessAuthData.getAuth(make.getAuthString()).username() + " moved " + make.move.getStartPosition().toString() + " -> " + make.move.getEndPosition().toString(), session);
-                    sendGameAll(game);
-                    if (game.isInCheck(ChessGame.TeamColor.WHITE)){
-                        sendOther(data.whiteUsername() + "is in check", null);
-                    } else if (game.isInCheck(ChessGame.TeamColor.BLACK)) {
-                        sendOther(data.blackUsername() + "is in check", null);
-                    }
+                    sendGameAll(AccessGameData.getGame(make.gameID).game());
                     if (game.isInCheckmate(ChessGame.TeamColor.WHITE)){
-                        sendOther(data.whiteUsername() + "is in checkmate " + data.blackUsername() + " wins!!!", null);
+                        sendOther(data.whiteUsername() + " is in checkmate " + data.blackUsername() + " wins!!!", null);
                     } else if (game.isInCheckmate(ChessGame.TeamColor.BLACK)) {
-                        sendOther(data.blackUsername() + "is in checkmate " + data.whiteUsername() + " wins!!!", null);
+                        sendOther(data.blackUsername() + " is in checkmate " + data.whiteUsername() + " wins!!!", null);
+                    }
+                    if (game.isInCheck(ChessGame.TeamColor.WHITE)){
+                        sendOther(data.whiteUsername() + " is in check", null);
+                    } else if (game.isInCheck(ChessGame.TeamColor.BLACK)) {
+                        sendOther(data.blackUsername() + " is in check", null);
                     }
                 }
             } else if (command.getCommandType() == UserGameCommand.CommandType.LEAVE) {

@@ -101,9 +101,9 @@ public class AccessGameData {
     static public void removePlayer(int gameID, String username) throws Exception {
         GameData data = getGame(gameID);
         String colString;
-        if (data.whiteUsername().equals(username)){
+        if (data.whiteUsername() != null && data.whiteUsername().equals(username)){
             colString = "whiteUsername";
-        }else if(data.blackUsername().equals(username)){
+        }else if(data.blackUsername() != null && data.blackUsername().equals(username)){
             colString = "blackUsername";
         }else{
             throw new Exception("not part of the game");
