@@ -4,20 +4,44 @@ import java.util.Collection;
 import java.util.HashSet;
 
 public class QueenMovesCalculator extends PieceMovesCalculator{
-    Collection<ChessMove> possible;
-    ChessPosition position;
-    ChessPiece myPiece;
-    RookMovesCalculator rook;
-    BishopMoveCalculator bishop;
     public QueenMovesCalculator() {
         this.possible = new HashSet<>();
-        rook = new RookMovesCalculator();
-        bishop = new BishopMoveCalculator();
+
     }
 
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        rook.rookMoves(board, myPosition, this.possible);
-        bishop.bishopMoves(board, myPosition, this.possible);
+        this.myPiece = board.getPiece(myPosition);
+        int row = myPosition.getRow();
+        int col = myPosition.getColumn();
+        checkPos(1,-1,row,col,board,myPosition);
+        // Getting all possible moves moving to the top right corner
+        row = myPosition.getRow();
+        col = myPosition.getColumn();
+        checkPos(1,1,row,col,board,myPosition);
+        row = myPosition.getRow();
+        col = myPosition.getColumn();
+        // Getting all possible moves moving to bottom right corner
+        checkPos(-1,1,row,col,board,myPosition);
+        row = myPosition.getRow();
+        col = myPosition.getColumn();
+        // Getting all possible moves moving to bottom left corner
+        checkPos(-1,-1,row,col,board,myPosition);
+        // Getting all possible moves moving to the top
+        row = myPosition.getRow();
+        col = myPosition.getColumn();
+        checkPos(1,0,row,col,board,myPosition);
+        // Getting all possible moves moving to the right
+        row = myPosition.getRow();
+        col = myPosition.getColumn();
+        checkPos(0,1,row,col,board,myPosition);
+        row = myPosition.getRow();
+        col = myPosition.getColumn();
+        // Getting all possible moves moving to bottom
+        checkPos(-1,0,row,col,board,myPosition);
+        row = myPosition.getRow();
+        col = myPosition.getColumn();
+        // Getting all possible moves moving to left
+        checkPos(0,-1,row,col,board,myPosition);
         return this.possible;
     }
 }

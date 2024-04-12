@@ -7,7 +7,19 @@ public class PieceMovesCalculator {
     ChessPosition position;
     ChessPiece myPiece;
     public void checkPos(int rowInc, int colInc, int row, int col, ChessBoard board, ChessPosition myPosition){
-        while(row>1 && col>1 && col<8 && row<8){
+        int rowMin = 0;
+        int rowMax = 8;
+        if (rowInc == -1){
+            rowMin = 1;
+            rowMax = 9;
+        }
+        int colMin = 0;
+        int colMax = 8;
+        if (colInc == -1){
+            colMin = 1;
+            colMax = 9;
+        }
+        while(row>rowMin && col>colMin && col<colMax && row<rowMax){
             row += rowInc;
             col += colInc;
             // System.out.println("Bishop Position: {" + row + "," + col + "}");
@@ -24,7 +36,7 @@ public class PieceMovesCalculator {
         }
     }
     public void checkOne(int rowInc, int colInc, int row, int col, ChessBoard board, ChessPosition myPosition){
-        if(row>(0 + Math.abs(rowInc)) && col>(0 + Math.abs(colInc)) && col<(9 - Math.abs(colInc)) && row<(9 - Math.abs(rowInc))) {
+        if(row>(1+(1-rowInc)/2) && col>(1+(1-colInc)/2) && col<(8+(1-colInc)/2) && row<(8+(1-rowInc)/2)) {
             row += rowInc;
             col += colInc;
             // System.out.println("King Position: {" + row + "," + col + "}");
