@@ -2,5 +2,14 @@ package server;
 
 import org.eclipse.jetty.websocket.api.Session;
 
-public record SessionData(String username, Session session) {
+import java.util.Map;
+import java.util.Set;
+
+public record SessionData(Map<Session, String> seshes){
+
+
+    @Override
+    public Map<Session, String> seshes() {
+        return seshes;
+    }
 }
