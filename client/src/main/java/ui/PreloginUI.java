@@ -5,10 +5,10 @@ import model.UserData;
 
 import java.io.IOException;
 import java.util.Scanner;
-import server.Server;
+
 
 public class PreloginUI {
-    static Server server;
+
     static int desPort = 8080;
     static ServerFacade facade = ServerFacade.getInstance("localhost", desPort);
     public static void main(String[] args) throws IOException {
@@ -51,6 +51,5 @@ public class PreloginUI {
                 System.out.println("INVALID COMMAND: try typing 'help' for valid commands");
             }
         }
-        server.stop();
     }
 }

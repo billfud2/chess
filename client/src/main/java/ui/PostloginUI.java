@@ -6,8 +6,6 @@ import facade.ServerFacade;
 import facade.WSClient;
 import model.GameData;
 import recordsForReqAndRes.JoinGameRequest;
-import server.Server;
-import spark.Spark;
 import webSocketMessages.userCommands.*;
 
 
