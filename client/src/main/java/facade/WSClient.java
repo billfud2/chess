@@ -21,8 +21,8 @@ public class WSClient extends Endpoint{
     public ChessGame curGame;
     public Boolean failedLog;
 
-    public WSClient(String URL, int port, ChessGame.TeamColor color) throws Exception {
-        websiteURL = "ws://" + URL + ":" + Integer.toString(port);
+    public WSClient(String uRL, int port, ChessGame.TeamColor color) throws Exception {
+        websiteURL = "ws://" + uRL + ":" + Integer.toString(port);
         URI uri = new URI(websiteURL + "/connect");
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
         this.session = container.connectToServer(this, uri);

@@ -98,6 +98,7 @@ public class Server {
                 Resign res = gson.fromJson(message, Resign.class);
                 ChessGame game = AccessGameData.getGame(res.gameID).game();
                 game.isOver = true;
+                AccessGameData.updateGame(res.gameID, gson.toJson(game));
                 String name = AccessAuthData.getAuth(res.getAuthString()).username();
                 sendOther(name + " resigned the game is over", null);
             }

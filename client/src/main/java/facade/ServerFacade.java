@@ -22,10 +22,10 @@ public class ServerFacade {
 
     public ServerFacade() {
     }
-    public static ServerFacade getInstance(String URL, int port){
+    public static ServerFacade getInstance(String uRL, int port){
         if (instance == null) {
             instance = new ServerFacade();
-            websiteURL = "http://" + URL + ":" + Integer.toString(port);
+            websiteURL = "http://" + uRL + ":" + Integer.toString(port);
         }
         return instance;
     }
