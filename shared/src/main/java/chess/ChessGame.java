@@ -148,7 +148,10 @@ public class ChessGame {
      */
     public boolean isInCheckmate(TeamColor teamColor) {
         if (isInCheck(teamColor)){
-            return cantMove(teamColor);
+            if(cantMove(teamColor)){
+                this.isOver = true;
+                return true;
+            }
         }
         return false;
     }
@@ -165,7 +168,6 @@ public class ChessGame {
                 }
             }
         }
-        this.isOver = true;
         return true;
     }
 
@@ -178,7 +180,10 @@ public class ChessGame {
      */
     public boolean isInStalemate(TeamColor teamColor) {
         if (!isInCheck(teamColor)){
-            return cantMove(teamColor);
+            if(cantMove(teamColor)){
+                this.isOver = true;
+                return true;
+            }
         }
         return false;
     }

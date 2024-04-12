@@ -105,12 +105,8 @@ public class AccessGameData {
             colString = "whiteUsername";
         }else if(data.blackUsername() != null && data.blackUsername().equals(username)){
             colString = "blackUsername";
-        }else
-        if (data.blackUsername() != null) {
+        }else{
             return;
-        }
-        else{
-                throw new Exception("not part of the game");
         }
         try (var preparedStatement = conn.prepareStatement("UPDATE game SET "+ colString +" = NULL WHERE gameID=?")) {
             preparedStatement.setInt(1, gameID);
