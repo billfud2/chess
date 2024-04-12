@@ -58,11 +58,15 @@ public class Server {
             if (command.getCommandType() == UserGameCommand.CommandType.JOIN_PLAYER) {
                 JoinPlayer join = gson.fromJson(message, JoinPlayer.class);
                 sessions.add(session);
+                gameServ = new GameService();
+                gameServ.joinGame(new JoinGameRequest(join.color, join.gameID), join.getAuthString());
                 session.getRemote().sendString(gson.toJson(new LoadGame(AccessGameData.getGame(join.gameID).game())));
                 sendOther(AccessAuthData.getAuth(join.getAuthString()).username() + " joined as " + join.color, session);
             } else if (command.getCommandType() == UserGameCommand.CommandType.JOIN_OBSERVER) {
                 JoinObserver obser = gson.fromJson(message, JoinObserver.class);
                 sessions.add(session);
+                gameServ = new GameService();
+                gameServ.joinGame(new JoinGameRequest(null, obser.gameID), obser.getAuthString());
                 session.getRemote().sendString(gson.toJson(new LoadGame(AccessGameData.getGame(obser.gameID).game())));
                 sendOther(AccessAuthData.getAuth(obser.getAuthString()).username() + " joined as an observer", session);
             } else if (command.getCommandType() == UserGameCommand.CommandType.MAKE_MOVE) {
