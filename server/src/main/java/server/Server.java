@@ -114,6 +114,10 @@ public class Server {
             session.getRemote().sendString(gson.toJson(new Error(e.getMessage())));
         }
     }
+    @OnWebSocketClose
+    public void onClose(int statusCode, String reason, Session session) {
+        sessions.remove(session);
+    }
     public void stop() {
         Spark.stop();
         Spark.awaitStop();
