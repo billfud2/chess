@@ -15,7 +15,6 @@ import server.handlers.ClearHandler;
 import server.handlers.GameHandler;
 import server.handlers.UserHandler;
 import org.eclipse.jetty.websocket.api.annotations.*;
-import org.eclipse.jetty.websocket.api.*;
 import service.GameService;
 import spark.*;
 import webSocketMessages.serverMessages.*;
@@ -29,7 +28,7 @@ import java.util.*;
 @WebSocket
 public class Server {
     static Gson gson = new Gson();
-    static Map<Integer, SessionData> sessions = new HashMap<>();
+    static Map<Session, Integer> sessions = new HashMap<>();
     static GameService gameServ;
 
 
@@ -65,35 +64,25 @@ public class Server {
                 }else{
                     throw new Exception("tried to join a taken game");
                 }
-                if (!sessions.keySet().contains(join.gameID)){
-                    sessions.put(join.gameID,new SessionData(new HashMap<>()));
-                }else{
-                    sessions.get(join.gameID).seshes().put(session,user);
-                }
+                sessions.put(session, join.gameID);
                 session.getRemote().sendString(gson.toJson(new LoadGame(gData.game())));
-                sendOther(user + " joined as " + join.playerColor, user,join.gameID);
+                sendOther(user + " joined as " + join.playerColor, session,join.gameID);
             } else if (command.getCommandType() == UserGameCommand.CommandType.JOIN_OBSERVER) {
                 JoinObserver obser = gson.fromJson(message, JoinObserver.class);
                 String user = AccessAuthData.getAuth(obser.getAuthString()).username();
-                if (!sessions.keySet().contains(obser.gameID)){
-                    sessions.put(obser.gameID,new SessionData(new HashMap<>()));
-                }else{
-
-                    sessions.get(obser.gameID).seshes().put(session,user);
-                }
+                sessions.put(session, obser.gameID);
                 session.getRemote().sendString(gson.toJson(new LoadGame(AccessGameData.getGame(obser.gameID).game())));
-                sendOther(user + " joined as an observer", user,obser.gameID);
+                sendOther(user + " joined as an observer", session,obser.gameID);
             } else if (command.getCommandType() == UserGameCommand.CommandType.MAKE_MOVE) {
                 MakeMove make = gson.fromJson(message, MakeMove.class);
                 GameData data = AccessGameData.getGame(make.gameID);
                 ChessGame game = data.game();
-                String user = AccessAuthData.getAuth(make.getAuthString()).username();
                 if (game.isOver){
                     session.getRemote().sendString(gson.toJson(new Error("game has ended no moves can be made")));
                 }else {
                     game.makeMove(make.move);
                     AccessGameData.updateGame(make.gameID, gson.toJson(game));
-                    sendOther( user + " moved " + make.move.getStartPosition().toString() + " -> " + make.move.getEndPosition().toString(),user ,make.gameID);
+                    sendOther(AccessAuthData.getAuth(make.getAuthString()).username() + " moved " + make.move.getStartPosition().toString() + " -> " + make.move.getEndPosition().toString(), session,make.gameID);
                     sendGameAll(AccessGameData.getGame(make.gameID).game(),make.gameID);
                     if (game.isInCheckmate(ChessGame.TeamColor.WHITE)){
                         sendOther(data.whiteUsername() + " is in checkmate " + data.blackUsername() + " wins!!!", null,make.gameID);
@@ -110,8 +99,8 @@ public class Server {
                 Leave lev = gson.fromJson(message, Leave.class);
                 String name = AccessAuthData.getAuth(lev.getAuthString()).username();
                 AccessGameData.removePlayer(lev.gameID, name);
-                sendOther(name + " left", name, lev.gameID);
-                sessions.get(lev.gameID).seshes().remove(session);
+                sendOther(name + " left", session, lev.gameID);
+                sessions.remove(session);
                 session.close();
             } else if (command.getCommandType() == UserGameCommand.CommandType.RESIGN) {
                 Resign res = gson.fromJson(message, Resign.class);
@@ -129,18 +118,21 @@ public class Server {
         Spark.stop();
         Spark.awaitStop();
     }
-    private void sendOther(String message, String user, int gameID) throws IOException {
-        Map<Session, String> seshs = sessions.get(gameID).seshes();
+    private void sendOther(String message, Session session, int gameID) throws IOException {
+        Map<Session, Integer> seshs = sessions;
         for (Session sesh : seshs.keySet()) {
-            if ((user == null) || (!seshs.get(sesh).equals(user))){
-            sesh.getRemote().sendString(gson.toJson(new Notification(message)));
-            }
+            if (sessions.get(sesh).equals(gameID))
+                if ((session == null) || (!sesh.equals(session))) {
+                    sesh.getRemote().sendString(gson.toJson(new Notification(message)));
+                }
         }
     }
     private void sendGameAll(ChessGame game, int gameID) throws IOException {
-        Map<Session, String> seshs = sessions.get(gameID).seshes();
+        Map<Session, Integer> seshs = sessions;
         for (Session sesh : seshs.keySet()) {
-            sesh.getRemote().sendString(gson.toJson(new LoadGame(game)));
+            if(sessions.get(sesh).equals(gameID)) {
+                sesh.getRemote().sendString(gson.toJson(new LoadGame(game)));
+            }
         }
     }
 
