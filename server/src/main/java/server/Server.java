@@ -28,8 +28,8 @@ import java.util.*;
 @WebSocket
 public class Server {
     static Gson gson = new Gson();
-    static Map<Session, Integer> sessions = new HashMap<>();
-    static GameService gameServ;
+    Map<Session, Integer> sessions = new HashMap<>();
+    int count = 0;
 
 
     public static void main(String[] args) {
@@ -77,22 +77,28 @@ public class Server {
                 MakeMove make = gson.fromJson(message, MakeMove.class);
                 GameData data = AccessGameData.getGame(make.gameID);
                 ChessGame game = data.game();
+                String user = AccessAuthData.getAuth(make.getAuthString()).username();
+                ChessGame.TeamColor pieceColor = data.game().getBoard().getPiece(make.move.getStartPosition()).getTeamColor();
                 if (game.isOver){
                     session.getRemote().sendString(gson.toJson(new Error("game has ended no moves can be made")));
                 }else {
-                    game.makeMove(make.move);
-                    AccessGameData.updateGame(make.gameID, gson.toJson(game));
-                    sendOther(AccessAuthData.getAuth(make.getAuthString()).username() + " moved " + make.move.getStartPosition().toString() + " -> " + make.move.getEndPosition().toString(), session,make.gameID);
-                    sendGameAll(AccessGameData.getGame(make.gameID).game(),make.gameID);
-                    if (game.isInCheckmate(ChessGame.TeamColor.WHITE)){
-                        sendOther(data.whiteUsername() + " is in checkmate " + data.blackUsername() + " wins!!!", null,make.gameID);
-                    } else if (game.isInCheckmate(ChessGame.TeamColor.BLACK)) {
-                        sendOther(data.blackUsername() + " is in checkmate " + data.whiteUsername() + " wins!!!", null,make.gameID);
-                    }
-                    if (game.isInCheck(ChessGame.TeamColor.WHITE)){
-                        sendOther(data.whiteUsername() + " is in check", null,make.gameID);
-                    } else if (game.isInCheck(ChessGame.TeamColor.BLACK)) {
-                        sendOther(data.blackUsername() + " is in check", null,make.gameID);
+                    if ((pieceColor == ChessGame.TeamColor.WHITE && data.whiteUsername().equals(user)) || (pieceColor == ChessGame.TeamColor.BLACK && data.blackUsername().equals(user))){
+                        game.makeMove(make.move);
+                        AccessGameData.updateGame(make.gameID, gson.toJson(game));
+                        sendOther( user + " moved " + make.move.getStartPosition().toString() + " -> " + make.move.getEndPosition().toString(), session, make.gameID);
+                        sendGameAll(AccessGameData.getGame(make.gameID).game(), make.gameID);
+                        if (game.isInCheckmate(ChessGame.TeamColor.WHITE)) {
+                            sendOther(data.whiteUsername() + " is in checkmate " + data.blackUsername() + " wins!!!", null, make.gameID);
+                        } else if (game.isInCheckmate(ChessGame.TeamColor.BLACK)) {
+                            sendOther(data.blackUsername() + " is in checkmate " + data.whiteUsername() + " wins!!!", null, make.gameID);
+                        }
+                        if (game.isInCheck(ChessGame.TeamColor.WHITE)) {
+                            sendOther(data.whiteUsername() + " is in check", null, make.gameID);
+                        } else if (game.isInCheck(ChessGame.TeamColor.BLACK)) {
+                            sendOther(data.blackUsername() + " is in check", null, make.gameID);
+                        }
+                    }else{
+                        throw new Exception("not your piece");
                     }
                 }
             } else if (command.getCommandType() == UserGameCommand.CommandType.LEAVE) {
@@ -100,22 +106,37 @@ public class Server {
                 String name = AccessAuthData.getAuth(lev.getAuthString()).username();
                 AccessGameData.removePlayer(lev.gameID, name);
                 sendOther(name + " left", session, lev.gameID);
+                sessions.remove(session);
                 session.close();
             } else if (command.getCommandType() == UserGameCommand.CommandType.RESIGN) {
                 Resign res = gson.fromJson(message, Resign.class);
-                ChessGame game = AccessGameData.getGame(res.gameID).game();
+                GameData data = AccessGameData.getGame(res.gameID);
+                ChessGame game = data.game();
+                String name = AccessAuthData.getAuth(res.getAuthString()).username();
+                if(!name.equals(data.whiteUsername()) && !name.equals(data.blackUsername())){
+                    throw new Exception("Observer can't resign");
+                }
+                if(game.isOver){
+                    throw new Exception("someone already resigned");
+                }
                 game.isOver = true;
                 AccessGameData.updateGame(res.gameID, gson.toJson(game));
-                String name = AccessAuthData.getAuth(res.getAuthString()).username();
                 sendOther(name + " resigned the game is over", null, res.gameID);
             }
         }catch(Exception e){
             session.getRemote().sendString(gson.toJson(new Error(e.getMessage())));
         }
     }
+    @OnWebSocketConnect
+    public void onConnect(Session session) {
+        if(count <= 0){
+            sessions = new HashMap<>();
+        }
+        count++;
+    }
     @OnWebSocketClose
-    public void onClose(int statusCode, String reason, Session session) {
-        sessions.remove(session);
+    public void onClose(int statusCode, String reason) {
+        count--;
     }
     public void stop() {
         Spark.stop();
